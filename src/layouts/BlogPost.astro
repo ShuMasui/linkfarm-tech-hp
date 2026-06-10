@@ -1,86 +1,138 @@
 ---
-import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
-<html lang="en">
-	<head>
-		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
-	</head>
+<!doctype html>
+<html lang="ja" class="scroll-smooth">
+  <head>
+    <BaseHead title={`${title} - LinkFarm Tech.`} description={description} />
+  </head>
 
-	<body>
-		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
-					</div>
-					<slot />
-				</div>
-			</article>
-		</main>
-		<Footer />
-	</body>
+  <body class="bg-wheat-light text-wheat-dark font-sans antialiased overflow-x-hidden">
+    <!-- ヘッダー -->
+    <Header />
+
+    <main class="py-16 md:py-24">
+      <article class="container mx-auto px-6 max-w-3xl">
+        <!-- 戻るリンク -->
+        <div class="mb-8">
+          <a href="/blog" class="inline-flex items-center gap-1 text-sm font-bold text-brand-primary hover:text-brand-primary/80 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+            </svg>
+            ブログ一覧に戻る
+          </a>
+        </div>
+
+        <!-- 記事ヘッダー情報 -->
+        <header class="mb-12 text-center">
+          <div class="inline-block px-3 py-1 rounded-full bg-wheat border border-wheat-dark/10 text-xs font-bold text-wheat-dark/70 mb-4">
+            <FormattedDate date={pubDate} />
+            {updatedDate && (
+              <span class="ml-2 font-normal text-stone-500">
+                (更新: <FormattedDate date={updatedDate} />)
+              </span>
+            )}
+          </div>
+          
+          <h1 class="text-3xl md:text-5xl font-black text-wheat-dark leading-tight mb-6">
+            {title}
+          </h1>
+
+          <p class="text-base text-wheat-dark/65 max-w-xl mx-auto italic">
+            {description}
+          </p>
+        </header>
+
+        <!-- メインビジュアル -->
+        {heroImage && (
+          <div class="aspect-[16/9] w-full rounded-3xl overflow-hidden shadow-md border border-stone-200/50 mb-12">
+            <Image src={heroImage} alt={title} width={1020} height={510} class="w-full h-full object-cover" />
+          </div>
+        )}
+
+        <!-- 記事本文 -->
+        <div class="prose prose-stone max-w-none text-wheat-dark/80 leading-relaxed text-lg space-y-6">
+          <slot />
+        </div>
+      </article>
+    </main>
+
+    <!-- フッター -->
+    <Footer />
+  </body>
 </html>
+
+<style is:global>
+  /* マークダウン本文用の簡易プロセスタイル (Tailwind Typographyが無い場合のフォールバック) */
+  .prose h2 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #3d2b1f;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(245, 222, 179, 0.4);
+  }
+  .prose h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #3d2b1f;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .prose p {
+    margin-bottom: 1.5rem;
+  }
+  .prose ul, .prose ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+    list-style-type: disc;
+  }
+  .prose li {
+    margin-bottom: 0.5rem;
+  }
+  .prose blockquote {
+    border-left: 4px solid #4f46e5;
+    padding-left: 1.5rem;
+    color: #57534e;
+    font-style: italic;
+    margin: 1.5rem 0;
+  }
+  .prose a {
+    color: #4f46e5;
+    text-decoration: underline;
+    font-weight: 600;
+  }
+  .prose a:hover {
+    color: #3b82f6;
+  }
+  .prose code {
+    background: #f5deb3;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+  }
+  .prose pre {
+    background: #2d3436;
+    color: #fdfaf2;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+  .prose pre code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+  }
+</style>
