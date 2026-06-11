@@ -1,4 +1,8 @@
 ---
+import { Image } from "astro:assets"
+import profileMasui from "../assets/team-profile-masui.jpg"
+import profileTanigawa from "../assets/team-profile-tanigawa.jpg"
+
 ---
 <section id="team" class="py-24 bg-white relative overflow-hidden">
   <!-- ボケた背景 -->
@@ -12,7 +16,8 @@
         プロジェクトメンバー
       </h2>
       <p class="text-wheat-dark/70">
-        テクノロジーと農業の専門知識を持ち寄り、若者に新しい農業の価値を提案する共同創業者たちです。
+        テクノロジーと農業の専門知識を持ち寄り、若者に新しい農業の価値を提案する共同創業者たちです。<br />
+        プロジェクトの実現可能性を、私たちは人で担保します。
       </p>
       <div class="w-20 h-1 bg-gradient-to-r from-brand-primary to-brand-secondary mx-auto rounded-full mt-6"></div>
     </div>
@@ -23,8 +28,8 @@
       <!-- Shu MASUI -->
       <div class="bg-wheat-light/20 border border-wheat/30 rounded-3xl p-8 shadow-sm flex flex-col md:flex-row gap-6 items-center md:items-start scroll-reveal">
         <!-- アバターサークル -->
-        <div class="w-24 h-24 rounded-2xl bg-gradient-to-tr from-brand-primary to-indigo-500 flex items-center justify-center text-white font-extrabold text-3xl shadow-md shrink-0">
-          SM
+        <div class="w-24 h-24 rounded-2xl bg-gradient-to-tr from-brand-primary to-indigo-500 flex items-center justify-center text-white font-extrabold text-3xl shadow-md shrink-0 overflow-hidden">
+          <Image src={profileMasui} alt="Shu MASUI's photo" width={96} height={96} class="w-full h-full object-cover" />
         </div>
         <div class="text-center md:text-left">
           <span class="text-xs font-semibold text-brand-primary tracking-widest block uppercase mb-1">奈良工業高等専門学校 (19歳)</span>
@@ -40,8 +45,8 @@
       <!-- Ryosuke TANIGAWA -->
       <div class="bg-wheat-light/20 border border-wheat/30 rounded-3xl p-8 shadow-sm flex flex-col md:flex-row gap-6 items-center md:items-start scroll-reveal">
         <!-- アバターサークル -->
-        <div class="w-24 h-24 rounded-2xl bg-gradient-to-tr from-brand-accent to-emerald-500 flex items-center justify-center text-white font-extrabold text-3xl shadow-md shrink-0">
-          RT
+        <div class="w-24 h-24 rounded-2xl bg-gradient-to-tr from-brand-accent to-emerald-500 flex items-center justify-center text-white font-extrabold text-3xl shadow-md shrink-0 overflow-hidden">
+          <Image src={profileTanigawa} alt="Ryosuke TANIGAWA's photo" width={96} height={96} class="w-full h-full object-cover" />
         </div>
         <div class="text-center md:text-left">
           <span class="text-xs font-semibold text-brand-accent tracking-widest block uppercase mb-1">天理大学 (20歳)</span>
