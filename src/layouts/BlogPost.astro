@@ -8,7 +8,7 @@ import FormattedDate from '../components/FormattedDate.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.props;
 
 // JSON-LD 構造化データ (BlogPosting & BreadcrumbList)
 const schema = {
@@ -100,6 +100,16 @@ const schema = {
               </span>
             )}
           </div>
+          
+          {tags && tags.length > 0 && (
+            <div class="flex flex-wrap justify-center gap-1.5 mb-4">
+              {tags.map((tag) => (
+                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-brand-primary/5 text-brand-primary border border-brand-primary/10">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
           
           <h1 class="text-3xl md:text-5xl font-black text-wheat-dark leading-tight mb-6">
             {title}
