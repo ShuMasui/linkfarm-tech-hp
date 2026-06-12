@@ -87,6 +87,16 @@ const breadcrumbSchema = {
                     <FormattedDate date={post.data.pubDate} />
                   </span>
                   
+                  {post.data.tags && post.data.tags.length > 0 && (
+                    <div class="flex flex-wrap gap-1.5 mb-3">
+                      {post.data.tags.map((tag) => (
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-brand-primary/5 text-brand-primary border border-brand-primary/10">
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  
                   <h2 class={`font-bold text-wheat-dark hover:text-brand-primary transition-colors mb-4 line-clamp-2 ${index === 0 ? 'text-2xl md:text-3xl' : 'text-xl'}`}>
                     <a href={`/blog/${post.id}/`}>{post.data.title}</a>
                   </h2>

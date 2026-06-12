@@ -5,65 +5,23 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import { generateBlogPostSchema } from '../utils/schema';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.props;
 
 // JSON-LD 構造化データ (BlogPosting & BreadcrumbList)
-const schema = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "BlogPosting",
-      "@id": `${Astro.url.href}#content`,
-      "isPartOf": {
-        "@id": Astro.url.href
-      },
-      "headline": title,
-      "description": description,
-      "datePublished": pubDate.toISOString(),
-      ...(updatedDate ? { "dateModified": updatedDate.toISOString() } : {}),
-      ...(heroImage ? { "image": [new URL(heroImage.src, Astro.site || Astro.url).toString()] } : {}),
-      "author": {
-        "@type": "Organization",
-        "name": "LinkFarm Tech."
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "LinkFarm Tech.",
-        "logo": {
-          "@type": "ImageObject",
-          "url": new URL('favicon.svg', Astro.site || Astro.url).toString()
-        }
-      }
-    },
-    {
-      "@type": "BreadcrumbList",
-      "@id": `${Astro.url.href}#breadcrumb`,
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "ホーム",
-          "item": Astro.site ? Astro.site.toString() : Astro.url.origin
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "活動日誌",
-          "item": new URL('blog', Astro.site || Astro.url).toString()
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": title,
-          "item": Astro.url.href
-        }
-      ]
-    }
-  ]
-};
+const schema = generateBlogPostSchema({
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  heroImage,
+  tags,
+  url: Astro.url.href,
+  siteUrl: Astro.site ? Astro.site.toString() : undefined,
+});
 ---
 
 <!doctype html>
@@ -100,6 +58,16 @@ const schema = {
               </span>
             )}
           </div>
+          
+          {tags && tags.length > 0 && (
+            <div class="flex flex-wrap justify-center gap-1.5 mb-4">
+              {tags.map((tag) => (
+                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-brand-primary/5 text-brand-primary border border-brand-primary/10">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
           
           <h1 class="text-3xl md:text-5xl font-black text-wheat-dark leading-tight mb-6">
             {title}

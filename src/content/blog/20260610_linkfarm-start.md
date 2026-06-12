@@ -3,6 +3,7 @@ title: 'LinkFarm Tech. プロジェクト、ついに始動！'
 description: '奈良県の農業人口減少と耕作放棄地の課題を解決するため、テクノロジーと農業体験を融合した新しい体験型学習プロジェクト「LinkFarm Tech.」が立ち上がりました！プロジェクトの概要と私たちの思いをご紹介します。'
 pubDate: '2026-06-10'
 heroImage: '../../assets/blog-placeholder-about.jpg'
+tags: 'プロジェクト始動, 奈良, 農業, テクノロジー'
 ---
 
 こんにちは！LinkFarm Tech. の Shu MASUI と Ryosuke TANIGAWA です。
