@@ -20,7 +20,7 @@ jobs:
             - name: Upload build artifacts
               uses: actions/upload-artifact@v4
               with: 
-               name: dist-artifact
+               name: dist-artifacts
                path: dist
     deploy:
         runs-on: ubuntu-latest
