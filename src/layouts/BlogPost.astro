@@ -27,7 +27,7 @@ const schema = generateBlogPostSchema({
 <!doctype html>
 <html lang="ja" class="scroll-smooth">
   <head>
-    <BaseHead title={`${title} - LinkFarm Tech.`} description={description} />
+    <BaseHead title={`${title} - LinkFarm Tech.`} description={description} image={heroImage} />
     <!-- JSON-LD 構造化データ -->
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
   </head>
