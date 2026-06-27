@@ -50,4 +50,4 @@ jobs:
                 create_credentials_file: true
                 export_environment_variables: true
             - name: Deploy to Firebase Hosting
-              run: npx firebase-tools deploy --only hosting
+              run: npx firebase-tools@15.22.2 deploy --only hosting
