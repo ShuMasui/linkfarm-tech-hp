@@ -34,7 +34,7 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                node-version: '22.23'
+                node-version: 22.23.1
                 cache: npm
             - name: Download build artifacts
               uses: actions/download-artifact@v4
@@ -50,4 +50,4 @@ jobs:
                 create_credentials_file: true
                 export_environment_variables: true
             - name: Deploy to Firebase Hosting
-              run: npx firebase-tools@15.22.0 deploy --only hosting
+              run: npx firebase-tools@15.22.1 deploy --only hosting
