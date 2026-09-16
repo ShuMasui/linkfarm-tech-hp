@@ -37,7 +37,7 @@ const breadcrumbSchema = {
   <head>
     <BaseHead title={`活動日誌 (Blog) - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
     <!-- JSON-LD 構造化データ -->
-    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbSchema)} />
   </head>
   <body class="bg-wheat-light text-wheat-dark font-sans antialiased overflow-x-hidden">
     <!-- ヘッダー -->

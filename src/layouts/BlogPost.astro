@@ -29,7 +29,7 @@ const schema = generateBlogPostSchema({
   <head>
     <BaseHead title={`${title} - LinkFarm Tech.`} description={description} image={heroImage} />
     <!-- JSON-LD 構造化データ -->
-    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
   </head>
 
   <body class="bg-wheat-light text-wheat-dark font-sans antialiased overflow-x-hidden">
