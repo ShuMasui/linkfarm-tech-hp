@@ -46,6 +46,11 @@
      カードではない（端をぼかして消すので輪郭を持たない）*/
   --color-veil: rgba(247, 246, 241, .78);
 
+  /* 画面の外縁に沿わせる焦茶のグロー。
+     地がクリームなので、焦茶は .26 程度では沈んで見えない */
+  --color-edge-glow:      rgba(61, 43, 31, .55);
+  --color-edge-glow-wide: rgba(61, 43, 31, .14);
+
   /* 記事の版面幅。本文の1行と図版の幅をこの1つの値で揃える。
      em ではなく rem なのは、.prose の font-size が 0.95rem のため
      em だと本文と図版で基準がずれるから */
@@ -159,6 +164,22 @@ body::before {
 }
 .edge-rule--left  { left:  var(--rule-inset); }
 .edge-rule--right { right: var(--rule-inset); }
+
+/* ---------- 画面外縁のグロー ----------
+   ビューポートの縁に沿って焦茶を薄く置き、中心へ向かって消す。
+   inset の box-shadow なので、要素そのものは透明のまま縁だけが描かれる。
+   ヘッダー(50)より上・紙のグレイン(60)より下に置き、
+   スクロールしても常に画面の外枠として残る */
+.edge-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 22px var(--color-edge-glow),
+    /* 22px だけだと輪が硬く見えるので、ごく薄い広がりを重ねて落ちを滑らかにする */
+    inset 0 0 72px var(--color-edge-glow-wide);
+}
 
 /* ---------- 右余白の縦組み（和文の柱） ---------- */
 .tategaki {
@@ -415,10 +436,12 @@ body::before {
   text-shadow: 0 1px 2px rgba(250, 248, 242, .9);
 }
 
-/* 表紙と事業詳細の扉の写真。Plate は子コンポーネントなので、
-   ページ側の scoped style からは届かない。ここで一括して指定する */
-.cover__plate { margin-top: clamp(56px, 8vw, 104px); }
-.cover__plate img { height: clamp(260px, 52vh, 560px); object-position: center 62%; }
+/* トップの写真と事業詳細の扉の写真。Plate は子コンポーネントなので、
+   ページ側の scoped style からは届かない。ここで一括して指定する。
+
+   .gallery__plate は将来カルーセルにする予定の枠。写真が増えても
+   高さと比率はこのまま保つ（→ docs/02-design.md 第6節）*/
+.gallery__plate img { height: clamp(260px, 52vh, 560px); object-position: center 62%; }
 
 .door__plate { margin-top: clamp(48px, 7vw, 88px); }
 .door__plate img { height: clamp(240px, 46vh, 480px); object-position: center 62%; }

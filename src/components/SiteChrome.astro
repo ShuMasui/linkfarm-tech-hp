@@ -1,5 +1,5 @@
 ---
-// 紙面の装置：背景のお皿・画面端の焦茶点線・右余白の縦組み。
+// 紙面の装置：背景のお皿・画面端の焦茶点線・右余白の縦組み・外縁のグロー。
 // 全ページで Layout から一度だけ描画する。すべて装飾なので aria-hidden。
 interface Props {
   /** 右余白の縦組みに出す文言 */
@@ -12,6 +12,7 @@ const { tategaki } = Astro.props;
 <div class="edge-rule edge-rule--left" aria-hidden="true"></div>
 <div class="edge-rule edge-rule--right" aria-hidden="true"></div>
 <div class="tategaki" aria-hidden="true">{tategaki}</div>
+<div class="edge-glow" aria-hidden="true"></div>
 
 <script>
   import { drawPlates } from '../scripts/plates';

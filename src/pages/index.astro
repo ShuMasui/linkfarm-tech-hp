@@ -50,6 +50,7 @@ const orgSchema = {
     'HP', 'メインページ', 'なら', '奈良', '学生', '補助金', '情報化システム',
     '農業', 'インバウンド', '体験型アクティビティ', '楽しい', 'シビックテック',
     '奈良市', '産学連携', 'LinkFarm Tech.',
+    '宇陀市', 
   ],
   founder: [
     {
@@ -89,23 +90,10 @@ const orgSchema = {
       </h1>
 
       <p class="lead">{SITE_DESCRIPTION}</p>
-
-      {/* 今後、現場写真が増えてきた段階で、このヒーローをカルーセル形式に
-          することを検討している。制約は docs/02-design.md 第6節を参照 */}
-      <Plate
-        class="cover__plate"
-        src={heroField}
-        alt="草を刈り整えた耕作地と、その先に広がる奈良の里山の集落"
-        caption="活動フィールド — 奈良県内の提携農地（耕作放棄地）"
-        captionRight="2026"
-        width={2400}
-        height={1350}
-        loading="eager"
-      />
     </div>
   </section>
 
-  <section class="section">
+  <section class="section toc-section">
     <div class="sheet spread">
       <Hashira no="目次" en="CONTENTS" ja="このサイトについて" />
 
@@ -120,6 +108,34 @@ const orgSchema = {
           </a>
         ))}
       </nav>
+    </div>
+  </section>
+
+  <section class="section gallery">
+    <div class="sheet">
+      {/* 写真が増えたらこの枠をカルーセルにする。高さと比率は据え置く。
+          制約（自動再生しない・文字を重ねない・prefers-reduced-motion を尊重する・
+          JS 無効でも1枚目が出る）は docs/02-design.md 第6節を参照 */}
+      <Plate
+        class="gallery__plate"
+        src={heroField}
+        alt="草を刈り整えた耕作地と、その先に広がる奈良の里山の集落"
+        caption="活動フィールド — 宇陀市内の提携農地（耕作放棄地）"
+        captionRight="2026"
+        width={2400}
+        height={1350}
+        loading="eager"
+      />
+    </div>
+  </section>
+
+  <section class="section partners">
+    <div class="sheet spread">
+      <Hashira no="パートナー" en="PARTNERS" ja="協賛・提携" />
+
+      <div>
+        <p class="partners__note">Partners will be arrived</p>
+      </div>
     </div>
   </section>
 </Page>
@@ -142,5 +158,28 @@ const orgSchema = {
     height: 1px;
     background: var(--color-sumi);
     flex: none;
+  }
+
+  /* 目次 → 写真 → パートナー が連続するため、隣り合う節の上下パディングが
+     足し合わさって写真の上下が 180px / 360px とちぐはぐになる。
+     写真の節は自前の余白を持たず、前後の節の側で明示的に揃える */
+  /* .contents という名前は Tailwind の display:contents ユーティリティと
+     衝突して要素のボックスごと消えるので使えない */
+  .toc-section { padding-bottom: clamp(48px, 6vw, 80px); }
+  .gallery  { padding-block: 0; }
+  .partners { padding-top: clamp(48px, 6vw, 80px); }
+
+  /* パートナーはまだ無い。点線の罫で「これから入る場所」であることを示す。
+     画面端の点線と同じ語彙 */
+  .partners__note {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+    letter-spacing: .04em;
+    color: var(--color-sumi-50);
+    margin: 0;
+    padding: clamp(28px, 4vw, 44px) 0;
+    border-top: 1px dotted var(--color-sumi-35);
+    border-bottom: 1px dotted var(--color-sumi-35);
   }
 </style>

@@ -25,7 +25,7 @@ URL の設計と、Astro のファイル配置との対応を定義する。
 
 | URL | ページ | § | Astro ファイル | モック |
 |---|---|---|---|---|
-| `/` | トップ（表紙＋目次） | — | `src/pages/index.astro` | `web-view.html` |
+| `/` | トップ（表紙＋目次＋写真＋パートナー） | — | `src/pages/index.astro` | `web-view.html` |
 | `/services/` | 事業内容 | 01 | `src/pages/services/index.astro` | `services-view.html` |
 | `/services/experience-learning/` | 体験型学習プロジェクト 詳細 | — | `src/pages/services/experience-learning.astro` | `project-view.html` |
 | `/organization/` | 団体概要 | 02 | `src/pages/organization/index.astro` | `organization-view.html` |

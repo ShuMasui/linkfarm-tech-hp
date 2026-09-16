@@ -67,6 +67,18 @@ CDN からは一切読み込まない（すべて npm + ビルド時コンパイ
 
 **新しい見た目の規則を足すときは、`global.css` に名前付きクラスとして書く。** 個別の微調整はページの scoped `<style>` に置く。
 
+#### コンポーネントのクラス名を Tailwind のユーティリティ名と被せない
+
+**Tailwind v4 はソースを走査して、見つけたクラス名に対応するユーティリティを生成する。** コンポーネント用に付けた名前がユーティリティ名と一致すると、Tailwind 側の宣言が生成され、こちらが上書きしていないプロパティはそのまま効いてしまう。
+
+実際に踏んだ例：目次の節に `class="section contents"` と付けたところ、Tailwind が `.contents { display: contents }` を生成し、**セクションのボックスごと消えて padding が一切効かなくなった**（`toc-section` に改名して解決）。
+
+`@import "tailwindcss"` が先頭にあるためユーティリティが先に来るが、こちらが宣言していないプロパティ（この場合 `display`）には勝てない。
+
+避けるべき名前の例：`contents` `block` `flex` `grid` `table` `hidden` `visible` `fixed` `absolute` `relative` `sticky` `static` `container` `isolate` `inline`。**レイアウトの語をそのままクラス名にしない。**
+
+衝突の検査は、ビルド後CSSから自前のクラス名に対する単一プロパティ宣言を拾えば機械的にできる。
+
 #### 子コンポーネントに scoped style は届かない
 
 Astro のスコープ付きスタイルは、`<style>` を書いたコンポーネントのテンプレート内の要素にしか適用されない。`Plate` のような子コンポーネントが描画する要素は対象外になり、**ビルド後の CSS から黙って消える。**
