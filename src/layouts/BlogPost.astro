@@ -54,7 +54,7 @@ const schema = generateBlogPostSchema({
     <p class="lead postmeta__lead">{description}</p>
   </PageHead>
 
-  <section class="section">
+  <section class="section postbody">
     <div class="sheet">
       {heroImage && (
         <Plate
@@ -79,19 +79,20 @@ const schema = generateBlogPostSchema({
 </Page>
 
 <style>
-  /* 扉に添える日付と更新日 */
+  /* 扉に添える日付と更新日。小さい字なので本文側の書体を使う
+     （--mincho は存在しない変数だった） */
   .postmeta {
-    font-family: var(--mincho);
+    font-family: var(--font-body);
     font-size: 0.8rem;
     letter-spacing: 0.1em;
-    color: var(--sumi-50);
+    color: var(--color-sumi-50);
     margin: 0 0 1rem;
     display: flex;
     flex-wrap: wrap;
     gap: 0 1.4em;
   }
   .postmeta__upd {
-    color: var(--sumi-35);
+    color: var(--color-sumi-35);
   }
   .postmeta__tags {
     margin-bottom: 1.4rem;
@@ -99,9 +100,12 @@ const schema = generateBlogPostSchema({
   .postmeta__lead {
     margin: 0;
   }
-  /* 記事の見出し写真は本文と同じ幅で置く */
-  .postplate {
-    max-width: 44em;
-    margin: 0 0 clamp(32px, 4vw, 52px);
+  /* 扉のリード文のすぐ下に写真を置くので、セクションの上パディングは要らない。
+     .pagehead 側の下パディングだけで間を取る */
+  .postbody {
+    padding-top: 0;
   }
+
+  /* .postplate の寸法は global.css にある。
+     Plate は子コンポーネントなので、ここの scoped style は届かない */
 </style>

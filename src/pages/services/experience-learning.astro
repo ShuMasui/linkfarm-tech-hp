@@ -396,117 +396,117 @@ const description =
   /* ---------- 統計 ---------- */
   .stats {
     display: grid;
-    border-top: 1px solid var(--sumi-18);
+    border-top: 1px solid var(--color-sumi-18);
     margin-top: clamp(40px, 5vw, 64px);
   }
   @media (min-width: 860px) { .stats { grid-template-columns: 1fr 1fr; } }
-  .stat { padding: clamp(32px, 4vw, 52px) 0; border-bottom: 1px solid var(--sumi-18); }
+  .stat { padding: clamp(32px, 4vw, 52px) 0; border-bottom: 1px solid var(--color-sumi-18); }
   @media (min-width: 860px) {
-    .stat:first-child { padding-right: clamp(32px, 4vw, 56px); border-right: 1px solid var(--sumi-18); }
+    .stat:first-child { padding-right: clamp(32px, 4vw, 56px); border-right: 1px solid var(--color-sumi-18); }
     .stat:last-child  { padding-left:  clamp(32px, 4vw, 56px); }
   }
-  .stat__label { font-size: .78rem; font-weight: 700; color: var(--sumi-50); letter-spacing: .1em; }
+  .stat__label { font-size: .78rem; font-weight: 700; color: var(--color-sumi-50); letter-spacing: .1em; }
   .stat__title { font-size: 1.28rem; font-weight: 700; margin: .5rem 0 1.6rem; }
-  .stat__fig { display: flex; align-items: baseline; gap: .3rem; font-family: var(--mincho); margin-bottom: .7rem; }
+  .stat__fig { display: flex; align-items: baseline; gap: .3rem; font-family: var(--font-display); font-weight: 400; margin-bottom: .7rem; }
   .stat__num { font-size: clamp(3.4rem, 8.5vw, 5.4rem); font-weight: 800; line-height: .9; letter-spacing: -.02em; }
   .stat__unit { font-size: 1.45rem; font-weight: 700; }
-  .stat__of { font-family: var(--gothic); font-size: .76rem; color: var(--sumi-50); margin-left: .5rem; }
+  .stat__of { font-family: var(--font-body); font-size: .76rem; color: var(--color-sumi-50); margin-left: .5rem; }
   .stat__sub { font-size: 1rem; font-weight: 700; margin: 0 0 1.3rem; }
-  .stat__sub b { font-family: var(--mincho); font-size: 1.45rem; }
-  .stat__src { font-size: .72rem; color: var(--sumi-50); letter-spacing: .04em; margin: 1.6rem 0 0; }
+  .stat__sub b { font-family: var(--font-display); font-weight: 400; font-size: 1.45rem; }
+  .stat__src { font-size: .72rem; color: var(--color-sumi-50); letter-spacing: .04em; margin: 1.6rem 0 0; }
 
   /* ---------- 声 ---------- */
   .voices { margin-top: clamp(56px, 7vw, 88px); }
   .voice-grid { display: grid; gap: clamp(28px, 4vw, 44px); margin-top: clamp(24px, 3vw, 36px); }
   @media (min-width: 860px) { .voice-grid { grid-template-columns: 1fr 1fr; } }
-  .voice { border-left: 3px solid var(--wheat); padding-left: clamp(18px, 2.4vw, 28px); }
+  .voice { border-left: 3px solid var(--color-wheat); padding-left: clamp(18px, 2.4vw, 28px); }
   .voice__who { font-size: .8rem; font-weight: 700; margin: 0 0 .1rem; }
-  .voice__role { font-size: .72rem; color: var(--sumi-50); letter-spacing: .08em; }
-  .voice__q { font-family: var(--mincho); font-size: clamp(1rem, 1.7vw, 1.18rem); line-height: 2.15; margin: 1.1rem 0 0; }
+  .voice__role { font-size: .72rem; color: var(--color-sumi-50); letter-spacing: .08em; }
+  .voice__q { font-family: var(--font-body); font-size: clamp(1rem, 1.7vw, 1.18rem); line-height: 2.15; margin: 1.1rem 0 0; }
 
   .conclusion {
     margin-top: clamp(48px, 6vw, 72px);
-    background: var(--sumi); color: var(--washi);
+    background: var(--color-sumi); color: var(--color-washi);
     padding: clamp(28px, 4vw, 48px);
-    font-family: var(--mincho);
+    font-family: var(--font-display);
     font-size: clamp(1rem, 1.9vw, 1.3rem);
-    font-weight: 500; line-height: 2.05;
+    font-weight: 400; line-height: 2.05;
   }
 
   /* ---------- サイクル比較 ---------- */
   .cycles { display: grid; gap: clamp(36px, 5vw, 60px); margin-top: clamp(40px, 5vw, 64px); }
   @media (min-width: 940px) { .cycles { grid-template-columns: 1fr 1fr; } }
   .cyc { padding: clamp(28px, 3.4vw, 42px); }
-  .cyc--old { background: var(--washi-3); }
-  .cyc--new { background: var(--wheat); }
+  .cyc--old { background: var(--color-washi-3); }
+  .cyc--new { background: var(--color-wheat); }
   .cyc__kind {
-    font-size: .72rem; font-weight: 700; letter-spacing: .14em; color: var(--sumi-70);
-    border-bottom: 1px solid var(--sumi-35); padding-bottom: .8em; margin: 0 0 1.6rem;
+    font-size: .72rem; font-weight: 700; letter-spacing: .14em; color: var(--color-sumi-70);
+    border-bottom: 1px solid var(--color-sumi-35); padding-bottom: .8em; margin: 0 0 1.6rem;
   }
   .cyc__h { font-size: 1.32rem; font-weight: 700; margin-bottom: .7rem; }
-  .cyc__p { font-size: .88rem; color: var(--sumi-70); line-height: 2.05; margin: 0 0 2.2rem; }
+  .cyc__p { font-size: .88rem; color: var(--color-sumi-70); line-height: 2.05; margin: 0 0 2.2rem; }
 
   .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
   .steps li {
     counter-increment: s;
     display: grid; grid-template-columns: 2.2rem 1fr; gap: .9rem;
     padding-bottom: 1.6rem; margin-bottom: 1.6rem;
-    border-bottom: 1px dotted var(--sumi-35);
+    border-bottom: 1px dotted var(--color-sumi-35);
   }
   .steps li:last-child { border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
   .steps li::before {
     content: counter(s, decimal-leading-zero);
-    font-family: var(--mincho); font-size: .92rem; font-weight: 700;
-    color: var(--sumi-50); line-height: 1.8;
+    font-family: var(--font-body); font-size: .92rem; font-weight: 700;
+    color: var(--color-sumi-50); line-height: 1.8;
   }
-  .steps h4 { font-family: var(--gothic); font-size: .98rem; font-weight: 700; margin-bottom: .2rem; }
-  .steps p { font-size: .81rem; color: var(--sumi-70); margin: 0; line-height: 1.9; }
+  .steps h4 { font-family: var(--font-body); font-size: .98rem; font-weight: 700; margin-bottom: .2rem; }
+  .steps p { font-size: .81rem; color: var(--color-sumi-70); margin: 0; line-height: 1.9; }
   .chip {
     display: inline-block; font-size: .67rem; font-weight: 700; letter-spacing: .08em;
     padding: .2em .7em; margin-left: .55em; vertical-align: .12em;
-    border: 1px solid var(--sumi-35); white-space: nowrap;
+    border: 1px solid var(--color-sumi-35); white-space: nowrap;
   }
-  .cyc--new .chip { border-color: var(--sumi); }
+  .cyc--new .chip { border-color: var(--color-sumi); }
 
-  .approach { display: grid; margin-top: clamp(48px, 6vw, 72px); border-top: 1px solid var(--sumi-18); }
+  .approach { display: grid; margin-top: clamp(48px, 6vw, 72px); border-top: 1px solid var(--color-sumi-18); }
   @media (min-width: 860px) { .approach { grid-template-columns: 1fr 1fr; } }
-  .approach > div { padding: clamp(28px, 3.4vw, 40px) 0; border-bottom: 1px solid var(--sumi-18); }
+  .approach > div { padding: clamp(28px, 3.4vw, 40px) 0; border-bottom: 1px solid var(--color-sumi-18); }
   @media (min-width: 860px) {
-    .approach > div:first-child { padding-right: clamp(28px, 3.4vw, 48px); border-right: 1px solid var(--sumi-18); }
+    .approach > div:first-child { padding-right: clamp(28px, 3.4vw, 48px); border-right: 1px solid var(--color-sumi-18); }
     .approach > div:last-child  { padding-left:  clamp(28px, 3.4vw, 48px); }
   }
 
   /* ---------- テック機能 ---------- */
   .feats__lead { margin-bottom: clamp(40px, 5vw, 64px); }
-  .feats { display: grid; border-top: 1px solid var(--sumi-18); }
+  .feats { display: grid; border-top: 1px solid var(--color-sumi-18); }
   @media (min-width: 860px) { .feats { grid-template-columns: 1fr 1fr; } }
-  .feat { padding: clamp(30px, 3.6vw, 46px) 0; border-bottom: 1px solid var(--sumi-18); }
+  .feat { padding: clamp(30px, 3.6vw, 46px) 0; border-bottom: 1px solid var(--color-sumi-18); }
   @media (min-width: 860px) {
-    .feat:nth-child(odd)  { padding-right: clamp(30px, 3.6vw, 52px); border-right: 1px solid var(--sumi-18); }
+    .feat:nth-child(odd)  { padding-right: clamp(30px, 3.6vw, 52px); border-right: 1px solid var(--color-sumi-18); }
     .feat:nth-child(even) { padding-left:  clamp(30px, 3.6vw, 52px); }
   }
-  .feat__icon { color: var(--sumi); margin-bottom: 1.1rem; display: block; }
-  .feat__kind { font-size: .74rem; font-weight: 700; letter-spacing: .1em; color: var(--sumi-50); display: block; margin-bottom: 1rem; }
+  .feat__icon { color: var(--color-sumi); margin-bottom: 1.1rem; display: block; }
+  .feat__kind { font-size: .74rem; font-weight: 700; letter-spacing: .1em; color: var(--color-sumi-50); display: block; margin-bottom: 1rem; }
 
   /* ---------- スケジュール ---------- */
   .tl__lead { margin-bottom: clamp(48px, 6vw, 80px); }
-  .tl { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--sumi-18); }
+  .tl { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--color-sumi-18); }
   .tl li { position: relative; padding: 0 0 clamp(40px, 5vw, 60px) clamp(26px, 4vw, 52px); }
   .tl li:last-child { padding-bottom: 0; }
   .tl li::before {
     content: ""; position: absolute; left: -4.5px; top: .7em;
-    width: 8px; height: 8px; background: var(--sumi);
+    width: 8px; height: 8px; background: var(--color-sumi);
   }
   .tl__when {
-    font-family: var(--mincho); font-size: .92rem; font-weight: 700; letter-spacing: .1em;
-    color: var(--sumi-70); display: block; margin-bottom: .45rem;
+    font-family: var(--font-body); font-size: .92rem; font-weight: 700; letter-spacing: .1em;
+    color: var(--color-sumi-70); display: block; margin-bottom: .45rem;
   }
 
   /* ---------- ページ末の戻り ---------- */
   .pagefoot {
     grid-column: 1 / -1;
     margin-top: clamp(48px, 6vw, 72px);
-    border-top: 1px solid var(--sumi-18);
+    border-top: 1px solid var(--color-sumi-18);
     padding-top: clamp(32px, 4vw, 48px);
   }
 </style>

@@ -11,7 +11,7 @@
 | 分類 | 技術 | バージョン | 役割 |
 |---|---|---|---|
 | フレームワーク | [Astro](https://astro.build/) | ^6.4.5 | 静的サイト生成 |
-| スタイル | [Tailwind CSS](https://tailwindcss.com/) | ^4.3.0 | ユーティリティCSS（`@tailwindcss/postcss` 経由） |
+| スタイル | [Tailwind CSS](https://tailwindcss.com/) | ^4.3.0 | デザイントークンとユーティリティ（`@tailwindcss/vite` 経由） |
 | コンテンツ | `@astrojs/mdx` | ^6.0.3 | 記事の Markdown / MDX |
 | 画像 | [sharp](https://sharp.pixelplumbing.com/) | ^0.34.3 | ビルド時の画像最適化 |
 | SEO | `@astrojs/sitemap` / `@astrojs/rss` | — | サイトマップ・RSS |
@@ -26,21 +26,61 @@ Node.js は **22.12.0 以上**（`package.json` の `engines` で指定）。
 
 このサイトは全ページが静的で、動的な機能を持たない（フォームもログインもない）。ビルド時にHTMLを吐き切れることが要件に対して最も素直であり、JavaScript をクライアントに送る必要がほとんどない。
 
-### Tailwind とデザインシステムの関係
+### Tailwind v4 の組み込み
 
-**このサイトのデザインシステムは、Tailwind のユーティリティではなく `src/styles/global.css` のコンポーネントクラスで持っている。**
+**PostCSS 経由ではなく Vite プラグイン（`@tailwindcss/vite`）で通している。** v4 公式が推奨する経路で、PostCSS より速く Astro の Vite に直結する。`postcss.config.mjs` と `@tailwindcss/postcss` / `postcss` は不要になったので削除した。
 
-モック（`docs/mocks/mock.css`）を素の CSS として書き、それをほぼそのまま `global.css` へ移植した。ユーティリティクラスへ翻訳し直すと、モックとの視覚的な一致を保証できなくなり、翻訳の過程で必ずずれが生じるため。[02-design.md](./02-design.md) が「実装の正典はモック」と宣言しているのは、この構造を指している。
+```js
+// astro.config.mjs
+import tailwindcss from '@tailwindcss/vite';
+vite: { plugins: [tailwindcss()] }
+```
 
-色と書体は `@theme` にも登録してあるので、必要な箇所では `bg-washi` のようなユーティリティも使える。ただし**新しい見た目の規則はユーティリティの寄せ集めではなく、名前のあるクラスとして `global.css` に足すこと。**
+CDN からは一切読み込まない（すべて npm + ビルド時コンパイル）。
 
-旧トークン（`--color-brand-primary` などの indigo / emerald / orange）は全廃済み。
+### デザイントークンは `@theme` に一本化
+
+色・書体・紙面の寸法はすべて `src/styles/global.css` の **`@theme static`** ブロックにある。ここが唯一の定義元で、同じ値を他の場所に書かない。
+
+```css
+@theme static {
+  --color-washi:   #faf8f2;
+  --color-wheat:   #f5deb3;
+  --color-sumi:    #3d2b1f;
+  --color-sumi-50: rgba(61, 43, 31, .50);
+  --font-display:  "WDXL Lubrifont JP N", ...;
+  --sheet: 1180px;
+}
+```
+
+`static` を付けているのは、**未使用のトークンが tree-shaking で消えるのを防ぐため**。コンポーネントCSSから `var(--color-sumi-50)` のように参照するので、ユーティリティとして使われていなくても出力に残す必要がある。
+
+この命名にしたことで、`bg-wheat` `text-sumi` `border-sumi-18` `font-display` といった **Tailwind のユーティリティがそのまま使える**ようになっている。
+
+### コンポーネントのCSSは名前付きクラスで持つ
+
+**見た目の規則は Tailwind のユーティリティの寄せ集めではなく、`global.css` の名前付きクラスで持っている。**
+
+モック（`docs/mocks/mock.css`）を素の CSS として書き、それをほぼそのまま移植した。ユーティリティへ翻訳し直すと、モックとの視覚的な一致を保証できなくなり、翻訳の過程で必ずずれが生じるため。[02-design.md](./02-design.md) が「実装の正典はモック」と宣言しているのは、この構造を指している。
+
+`clamp()` による流動サイズ、`writing-mode: vertical-rl`、`box-decoration-break`、名前付きエリアのグリッド、`repeating-linear-gradient` の点線、`feTurbulence` のデータURI など、ユーティリティに素直な対応物がない規則が多いことも理由のひとつ。
+
+**新しい見た目の規則を足すときは、`global.css` に名前付きクラスとして書く。** 個別の微調整はページの scoped `<style>` に置く。
 
 #### 子コンポーネントに scoped style は届かない
 
-Astro のスコープ付きスタイルは、`<style>` を書いたコンポーネントのテンプレート内の要素にしか適用されない。`Plate` のような子コンポーネントが描画する要素（`.cover__plate img` など）は対象外になり、**ビルド後の CSS から黙って消える。**
+Astro のスコープ付きスタイルは、`<style>` を書いたコンポーネントのテンプレート内の要素にしか適用されない。`Plate` のような子コンポーネントが描画する要素は対象外になり、**ビルド後の CSS から黙って消える。**
 
-実装中にこれで表紙の写真の高さ指定が失われた。子コンポーネント内の要素を狙うサイズ指定は `global.css` に置くこと。
+この罠は2回踏んだ。
+
+| 症状 | 原因 |
+|---|---|
+| 表紙の写真が元の縦横比のまま巨大に出た | `index.astro` の scoped style に `.cover__plate img` を書いていた |
+| 記事の写真だけ本文より広く（紙面いっぱいに）出た | `BlogPost.astro` の scoped style に `.postplate` を書いていた |
+
+**`Plate` に `class` を渡してサイズを効かせたいときは、必ず `global.css` に書く。** 現在 `.cover__plate` `.door__plate` `.postplate` の3つがそこにある。
+
+判別法：`<Plate class="foo">` のように**クラスを prop として子に渡している**なら、そのクラスへの指定は scoped では効かない。
 
 ---
 

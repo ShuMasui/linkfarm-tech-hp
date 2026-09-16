@@ -3,6 +3,7 @@
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
+import tailwindcss from '@tailwindcss/vite';
 
 
 // https://astro.build/config
@@ -28,6 +29,8 @@ export default defineConfig({
   // 読み込みをやめた。ファイルは src/assets/fonts/ に残してある。
 
   vite: {
-    plugins: [],
+    // Tailwind v4 は PostCSS 経由ではなく Vite プラグインで通す。
+    // 公式が推奨する経路で、PostCSS より速く Astro の Vite に直結する。
+    plugins: [tailwindcss()],
   },
 });
