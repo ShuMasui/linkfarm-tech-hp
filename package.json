@@ -15,11 +15,15 @@
     "@astrojs/mdx": "^6.0.3",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.3",
-    "@tailwindcss/postcss": "^4.3.1",
+    "@tailwindcss/vite": "^4.3.3",
     "astro": "^6.4.5",
     "astro-embed": "^0.13.0",
-    "postcss": "^8.5.15",
     "sharp": "^0.34.3",
     "tailwindcss": "^4.3.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.1"
   }
 }

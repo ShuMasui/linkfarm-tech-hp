@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LinkFarm Tech. — 農業に、人が向かう理由をつくる。</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=WDXL+Lubrifont+JP+N&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="mock.css" />
+<style>
+  .cover { padding: clamp(72px, 12vw, 148px) 0 clamp(64px, 9vw, 120px); }
+  .cover__eyebrow {
+    font-size: .68rem; font-weight: 500; letter-spacing: .28em; color: var(--sumi-50);
+    display: flex; align-items: center; gap: 1.1em;
+    margin-bottom: clamp(32px, 5vw, 56px);
+  }
+  .cover__eyebrow::before {
+    content: ""; width: clamp(28px, 4vw, 52px); height: 1px; background: var(--sumi); flex: none;
+  }
+  .cover__plate { margin-top: clamp(56px, 8vw, 104px); }
+  .cover__plate img { height: clamp(260px, 52vh, 560px); object-position: center 62%; }
+</style>
+</head>
+<body>
+
+<div class="plates" aria-hidden="true"></div>
+<div class="edge-rule edge-rule--left"  aria-hidden="true"></div>
+<div class="edge-rule edge-rule--right" aria-hidden="true"></div>
+<div class="tategaki" aria-hidden="true">農業 × テクノロジー ／ 奈良</div>
+
+<header class="site-header">
+  <div class="sheet site-header__in">
+    <a class="brand" href="web-view.html"><img src="logo-sumi.png" alt="LinkFarm Tech." /></a>
+    <nav class="nav">
+      <a href="services-view.html">事業内容</a>
+      <a href="organization-view.html">団体概要</a>
+      <a href="members-view.html">メンバー</a>
+      <a href="journal-view.html">活動日誌</a>
+      <a class="btn btn--fill btn--sm" href="contact-view.html">お問い合わせ</a>
+    </nav>
+    <button class="menu-btn" aria-label="メニューを開く">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<main>
+<section class="cover">
+  <div class="sheet">
+    <p class="cover__eyebrow">LINKFARM TECH. — AGRICULTURE × TECHNOLOGY</p>
+
+    <h1 class="display">
+      農業に、<br /><span class="ul">人が向かう理由</span>をつくる。
+    </h1>
+
+    <p class="lead">
+      奈良の耕作放棄地を舞台にした体験型学習プログラムの企画・運営と、提携農家様と学生をつなぐ連携、そして地域の活動を支えるWeb制作。LinkFarm Tech. は、農業とテクノロジーのあいだにある距離を縮める仕事をしています。
+    </p>
+
+    <!-- 今後、現場写真が増えてきた段階で、このヒーローをカルーセル形式に
+         することを検討している。制約は docs/02-design.md の 6節を参照：
+         自動再生しない／写真に文字を重ねない／prefers-reduced-motion を尊重する／
+         JS 無効でも1枚目が出ること -->
+    <figure class="plate cover__plate">
+      <img src="../../src/assets/hero/hero-02.jpg"
+           alt="草を刈り整えた耕作地と、その先に広がる奈良の里山の集落" />
+      <figcaption class="plate__cap">
+        <span>活動フィールド — 奈良県内の提携農地（耕作放棄地）</span>
+        <span>2026</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section">
+  <div class="sheet spread">
+    <div class="hashira">
+      <span class="hashira__no">目次</span>
+      <span class="hashira__en">CONTENTS</span>
+      <span class="hashira__ja">このサイトについて</span>
+    </div>
+
+    <nav class="toc" aria-label="目次">
+      <a class="toc__row" href="services-view.html">
+        <span class="toc__no">§ 01</span>
+        <span class="toc__en">SERVICES</span>
+        <span class="toc__ja">事業内容</span>
+        <span class="toc__desc">現地の体験を設計する仕事、提携農家様と学生をつなぐ仕事、そして活動を届けるWeb制作。</span>
+        <span class="toc__ar" aria-hidden="true">→</span>
+      </a>
+      <a class="toc__row" href="organization-view.html">
+        <span class="toc__no">§ 02</span>
+        <span class="toc__en">ORGANIZATION</span>
+        <span class="toc__ja">団体概要</span>
+        <span class="toc__desc">奈良の学生二人で動かしている団体です。設立、代表者、活動拠点。</span>
+        <span class="toc__ar" aria-hidden="true">→</span>
+      </a>
+      <a class="toc__row" href="members-view.html">
+        <span class="toc__no">§ 03</span>
+        <span class="toc__en">MEMBERS</span>
+        <span class="toc__ja">メンバー</span>
+        <span class="toc__desc">テクノロジーと農業を、一人ずつ持ち寄っています。</span>
+        <span class="toc__ar" aria-hidden="true">→</span>
+      </a>
+      <a class="toc__row" href="journal-view.html">
+        <span class="toc__no">§ 04</span>
+        <span class="toc__en">JOURNAL</span>
+        <span class="toc__ja">活動日誌</span>
+        <span class="toc__desc">現場で起きたことと、作物の成長記録。</span>
+        <span class="toc__ar" aria-hidden="true">→</span>
+      </a>
+      <a class="toc__row" href="contact-view.html">
+        <span class="toc__no">§ 05</span>
+        <span class="toc__en">CONTACT</span>
+        <span class="toc__ja">お問い合わせ</span>
+        <span class="toc__desc">参加・協賛、農地の連携、制作のご相談。</span>
+        <span class="toc__ar" aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="sheet">
+    <div class="foot-grid">
+      <div>
+        <h2 class="brand brand--foot"><img src="logo-sumi.png" alt="LinkFarm Tech." /></h2>
+        <p>農業とデジタル技術を掛け合わせ、若年層の農業関心を高めるとともに、耕作放棄地の活性化を目指しています。</p>
+      </div>
+
+      <div>
+        <h3>MENU</h3>
+        <ul>
+          <li><a href="services-view.html">事業内容</a></li>
+          <li><a href="project-view.html">体験型学習プロジェクト</a></li>
+          <li><a href="organization-view.html">団体概要</a></li>
+          <li><a href="members-view.html">メンバー</a></li>
+          <li><a href="journal-view.html">活動日誌</a></li>
+          <li><a href="contact-view.html">お問い合わせ</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>LOCATION &amp; CONTACT</h3>
+        <p>
+          活動拠点：奈良県内の提携農地（耕作放棄地）<br />
+          お問い合わせ：office[A]linkfarm-tech.com（[A]を@に変えてください）
+        </p>
+        <div class="sns">
+          <a href="#" aria-label="X">X</a>
+          <a href="#" aria-label="Instagram">IG</a>
+          <a href="#" aria-label="GitHub">GH</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="copy">
+      <span>&copy; 2026 LinkFarm Tech. All rights reserved.</span>
+      <span>2026年度 奈良市 産学官連携プラットフォーム 補助金 採択事業</span>
+    </div>
+  </div>
+</footer>
+
+<script src="mock.js"></script>
+</body>
+</html>

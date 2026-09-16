@@ -1,0 +1,66 @@
+---
+// § 05 お問い合わせ。二人体制で個人情報を預からない方針のため、
+// 入力フォームは置かず、窓口はメール1本に絞る。
+import { Image } from 'astro:assets';
+import Page from '../../layouts/Page.astro';
+import PageHead from '../../components/PageHead.astro';
+import { CONTACT_EMAIL, CONTACT_EMAIL_MASKED } from '../../consts';
+import inkPhoto from '../../assets/hero/hero-01.jpg';
+---
+
+<Page
+  title="お問い合わせ — LinkFarm Tech."
+  description="参加・協賛のご相談、農地の連携、Web制作のご依頼。どの用件でも同じ窓口で受けています。奈良の学生団体 LinkFarm Tech. への連絡先。"
+  tategaki="お問い合わせ ／ LinkFarm Tech."
+  current="contact"
+>
+  <PageHead no="05" en="CONTACT" crumb="お問い合わせ">
+    <Fragment slot="title">農業の価値を、<span class="ul">新たな形</span>で提供しませんか？</Fragment>
+    <p class="lead">
+      奈良の豊かな大自然と、現代のテクノロジー。これらを掛け合わせることで、若者が集まり、耕作放棄地が再び息を吹き返す。そんなワクワクする未来を、私たちと一緒に作りましょう。
+    </p>
+  </PageHead>
+
+  <section class="section">
+    <div class="sheet">
+      <div class="ink">
+        <div>
+          <h2>ご相談は、<span class="ul">一通のメール</span>から。</h2>
+          <p>
+            参加・協賛のご相談、農地の連携、Web制作のご依頼。どの用件でも同じ窓口で受けています。学生団体のため返信までお時間をいただくことがあります。
+          </p>
+          <div class="cta-row">
+            <a class="btn btn--fill" href={`mailto:${CONTACT_EMAIL}`}>メールで相談する</a>
+          </div>
+        </div>
+        <div class="ink__img">
+          <Image
+            src={inkPhoto}
+            alt="プロジェクトの活動報告を発表している様子"
+            width={1200}
+            height={900}
+          />
+        </div>
+      </div>
+
+      <dl class="deflist contact-deflist">
+        <dt>メール</dt>
+        <dd>{CONTACT_EMAIL_MASKED}</dd>
+
+        <dt>活動拠点</dt>
+        <dd>奈良県内の提携農地（耕作放棄地）</dd>
+
+        <dt>所在地</dt>
+        <dd>奈良県奈良市</dd>
+
+        <dt>ご相談の例</dt>
+        <dd>体験プログラムへの参加・協賛／農地の連携・ボランティアの受け入れ／Webサイト制作と技術支援</dd>
+      </dl>
+    </div>
+  </section>
+</Page>
+
+<style>
+  /* 墨の面から定義リストへ移るときの間 */
+  .contact-deflist { margin-top: clamp(56px, 7vw, 88px); }
+</style>

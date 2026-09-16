@@ -1,61 +1,49 @@
 ---
-const today = new Date();
+import { Image } from 'astro:assets';
+import logo from '../assets/linkfarm-logo-sumi.png';
+import { FOOT_MENU, SITE_TITLE, CONTACT_EMAIL_MASKED, SUBSIDY } from '../consts';
+
+const year = new Date().getFullYear();
 ---
 
-<footer class="bg-[#3d2b1f] text-[#fdfaf2] py-16 border-t border-[#f5deb3]/10 relative z-10">
-  <div class="container mx-auto px-6">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
-      <!-- サイト名・概要 -->
+<footer class="site-footer">
+  <div class="sheet">
+    <div class="foot-grid">
       <div>
-        <h2 class="text-2xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-secondary to-wheat mb-4">
-          LinkFarm Tech.
+        <h2 class="brand brand--foot">
+          <Image src={logo} alt={SITE_TITLE} width={411} height={75} loading="lazy" />
         </h2>
-        <p class="text-sm text-[#fdfaf2]/70 leading-relaxed max-w-sm">
-          農業とデジタル技術を掛け合わせ、若年層の農業関心を高めるとともに、耕作放棄地の活性化を目指す体験型学習プロジェクトです。
+        <p>
+          農業とデジタル技術を掛け合わせ、若年層の農業関心を高めるとともに、耕作放棄地の活性化を目指しています。
         </p>
       </div>
 
-      <!-- クイックリンク -->
       <div>
-        <h3 class="text-sm font-bold text-brand-secondary uppercase tracking-widest mb-4">Menu</h3>
-        <ul class="space-y-2.5 text-sm font-medium text-[#fdfaf2]/70">
-          <li><a href="/#problem" class="hover:text-white transition-colors">私たちの課題</a></li>
-          <li><a href="/#cycle" class="hover:text-white transition-colors">体験型学習のサイクル</a></li>
-          <li><a href="/#features" class="hover:text-white transition-colors">フィードバック機能</a></li>
-          <li><a href="/#schedule" class="hover:text-white transition-colors">年間スケジュール</a></li>
-          <li><a href="/#team" class="hover:text-white transition-colors">プロジェクトメンバー</a></li>
-          <li><a href="/blog" class="hover:text-white transition-colors">活動日誌 (Blog)</a></li>
+        <h3>MENU</h3>
+        <ul>
+          {FOOT_MENU.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
         </ul>
       </div>
 
-      <!-- お問い合わせ・活動場所 -->
       <div>
-        <h3 class="text-sm font-bold text-brand-secondary uppercase tracking-widest mb-4">Location & Contact</h3>
-        <p class="text-sm text-[#fdfaf2]/70 leading-relaxed mb-4">
+        <h3>LOCATION &amp; CONTACT</h3>
+        <p>
           活動拠点：奈良県内の提携農地（耕作放棄地）<br />
-          お問い合わせ：linkfarmtech[A]gmail.com ([A]を@に変えてください)
+          お問い合わせ：{CONTACT_EMAIL_MASKED}
         </p>
-        <!-- SNSリンク (ダミー) -->
-        <div class="flex gap-4">
-          <a href="#" class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="X (formerly Twitter)">
-            <span class="font-extrabold text-xs">X</span>
-          </a>
-          <a href="#" class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="Instagram">
-            <span class="font-extrabold text-xs">IG</span>
-          </a>
-          <a href="#" class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors" aria-label="GitHub">
-            <span class="font-extrabold text-xs">GH</span>
-          </a>
+        <div class="sns">
+          <a href="#" aria-label="X">X</a>
+          <a href="#" aria-label="Instagram">IG</a>
+          <a href="#" aria-label="GitHub">GH</a>
         </div>
       </div>
     </div>
 
-    <!-- コピーライト -->
-    <div class="pt-8 border-t border-white/10 text-center text-xs text-[#fdfaf2]/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p>&copy; {today.getFullYear()} LinkFarm Tech. All rights reserved.</p>
-      <p class="text-[10px] text-[#fdfaf2]/30">
-        Created for "若年層の獲得と耕作放棄地活用 体験型学習プロジェクト"
-      </p>
+    <div class="copy">
+      <span>&copy; {year} {SITE_TITLE} All rights reserved.</span>
+      <span>{SUBSIDY}</span>
     </div>
   </div>
 </footer>

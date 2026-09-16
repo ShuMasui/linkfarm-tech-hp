@@ -1,0 +1,15 @@
+---
+// 柱（傍注）。印刷物の柱と同じ役割で、いま紙面のどこを読んでいるかを示す。
+interface Props {
+  no: string;
+  en: string;
+  ja: string;
+}
+const { no, en, ja } = Astro.props;
+---
+
+<div class="hashira">
+  <span class="hashira__no">{no}</span>
+  <span class="hashira__en">{en}</span>
+  <span class="hashira__ja">{ja}</span>
+</div>

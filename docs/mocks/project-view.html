@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>体験型学習プロジェクト — LinkFarm Tech.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=WDXL+Lubrifont+JP+N&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="mock.css" />
+<style>
+/* ============================================================
+   事業詳細ページ固有のコンポーネント
+   ============================================================ */
+
+/* ---------- パンくずと扉 ---------- */
+.crumb {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .7em;
+  font-size: .74rem; letter-spacing: .08em; color: var(--sumi-50);
+  margin-bottom: clamp(28px, 4vw, 44px);
+}
+.crumb a { color: var(--sumi-50); text-decoration: none; border-bottom: 1px solid transparent; }
+.crumb a:hover { color: var(--sumi); border-bottom-color: var(--wheat-deep); }
+.crumb span[aria-hidden] { color: var(--sumi-35); }
+
+.door { padding: clamp(56px, 8vw, 104px) 0 clamp(56px, 8vw, 96px); }
+.door__no {
+  display: inline-block;
+  font-family: var(--mincho); font-size: 1rem; font-weight: 800; letter-spacing: .1em;
+  background: var(--wheat); padding: .1em .55em; margin-bottom: 1.4rem;
+}
+.door__en { font-size: .68rem; font-weight: 500; letter-spacing: .26em; color: var(--sumi-50); margin: 0 0 1.4rem; }
+.door__plate { margin-top: clamp(48px, 7vw, 88px); }
+.door__plate img { height: clamp(240px, 46vh, 480px); object-position: center 62%; }
+
+/* ---------- 統計 ---------- */
+.stats { display: grid; border-top: 1px solid var(--sumi-18); }
+@media (min-width: 860px) { .stats { grid-template-columns: 1fr 1fr; } }
+.stat { padding: clamp(32px, 4vw, 52px) 0; border-bottom: 1px solid var(--sumi-18); }
+@media (min-width: 860px) {
+  .stat:first-child { padding-right: clamp(32px, 4vw, 56px); border-right: 1px solid var(--sumi-18); }
+  .stat:last-child  { padding-left:  clamp(32px, 4vw, 56px); }
+}
+.stat__label { font-size: .78rem; font-weight: 700; color: var(--sumi-50); letter-spacing: .1em; }
+.stat__title { font-size: 1.28rem; font-weight: 700; margin: .5rem 0 1.6rem; }
+.stat__fig { display: flex; align-items: baseline; gap: .3rem; font-family: var(--mincho); margin-bottom: .7rem; }
+.stat__num { font-size: clamp(3.4rem, 8.5vw, 5.4rem); font-weight: 800; line-height: .9; letter-spacing: -.02em; }
+.stat__unit { font-size: 1.45rem; font-weight: 700; }
+.stat__of { font-family: var(--gothic); font-size: .76rem; color: var(--sumi-50); margin-left: .5rem; }
+.stat__sub { font-size: 1rem; font-weight: 700; margin: 0 0 1.3rem; }
+.stat__sub b { font-family: var(--mincho); font-size: 1.45rem; }
+.stat__src { font-size: .72rem; color: var(--sumi-50); letter-spacing: .04em; margin: 1.6rem 0 0; }
+
+/* ---------- 声 ---------- */
+.voices { margin-top: clamp(56px, 7vw, 88px); }
+.voice-grid { display: grid; gap: clamp(28px, 4vw, 44px); margin-top: clamp(24px, 3vw, 36px); }
+@media (min-width: 860px) { .voice-grid { grid-template-columns: 1fr 1fr; } }
+.voice { border-left: 3px solid var(--wheat); padding-left: clamp(18px, 2.4vw, 28px); }
+.voice__who { font-size: .8rem; font-weight: 700; margin: 0 0 .1rem; }
+.voice__role { font-size: .72rem; color: var(--sumi-50); letter-spacing: .08em; }
+.voice__q { font-family: var(--mincho); font-size: clamp(1rem, 1.7vw, 1.18rem); line-height: 2.15; margin: 1.1rem 0 0; }
+
+.conclusion {
+  margin-top: clamp(48px, 6vw, 72px);
+  background: var(--sumi); color: var(--washi);
+  padding: clamp(28px, 4vw, 48px);
+  font-family: var(--mincho);
+  font-size: clamp(1rem, 1.9vw, 1.3rem);
+  font-weight: 500; line-height: 2.05;
+}
+
+/* ---------- サイクル比較 ---------- */
+.cycles { display: grid; gap: clamp(36px, 5vw, 60px); }
+@media (min-width: 940px) { .cycles { grid-template-columns: 1fr 1fr; } }
+.cyc { padding: clamp(28px, 3.4vw, 42px); }
+.cyc--old { background: var(--washi-3); }
+.cyc--new { background: var(--wheat); }
+.cyc__kind {
+  font-size: .72rem; font-weight: 700; letter-spacing: .14em; color: var(--sumi-70);
+  border-bottom: 1px solid var(--sumi-35); padding-bottom: .8em; margin: 0 0 1.6rem;
+}
+.cyc__h { font-size: 1.32rem; font-weight: 700; margin-bottom: .7rem; }
+.cyc__p { font-size: .88rem; color: var(--sumi-70); line-height: 2.05; margin: 0 0 2.2rem; }
+
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li {
+  counter-increment: s;
+  display: grid; grid-template-columns: 2.2rem 1fr; gap: .9rem;
+  padding-bottom: 1.6rem; margin-bottom: 1.6rem;
+  border-bottom: 1px dotted var(--sumi-35);
+}
+.steps li:last-child { border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
+.steps li::before {
+  content: counter(s, decimal-leading-zero);
+  font-family: var(--mincho); font-size: .92rem; font-weight: 700;
+  color: var(--sumi-50); line-height: 1.8;
+}
+.steps h4 { font-family: var(--gothic); font-size: .98rem; font-weight: 700; margin-bottom: .2rem; }
+.steps p { font-size: .81rem; color: var(--sumi-70); margin: 0; line-height: 1.9; }
+.chip {
+  display: inline-block; font-size: .67rem; font-weight: 700; letter-spacing: .08em;
+  padding: .2em .7em; margin-left: .55em; vertical-align: .12em;
+  border: 1px solid var(--sumi-35); white-space: nowrap;
+}
+.cyc--new .chip { border-color: var(--sumi); }
+
+.approach { display: grid; margin-top: clamp(48px, 6vw, 72px); border-top: 1px solid var(--sumi-18); }
+@media (min-width: 860px) { .approach { grid-template-columns: 1fr 1fr; } }
+.approach > div { padding: clamp(28px, 3.4vw, 40px) 0; border-bottom: 1px solid var(--sumi-18); }
+@media (min-width: 860px) {
+  .approach > div:first-child { padding-right: clamp(28px, 3.4vw, 48px); border-right: 1px solid var(--sumi-18); }
+  .approach > div:last-child  { padding-left:  clamp(28px, 3.4vw, 48px); }
+}
+
+/* ---------- テック機能 ---------- */
+.feats { display: grid; border-top: 1px solid var(--sumi-18); }
+@media (min-width: 860px) { .feats { grid-template-columns: 1fr 1fr; } }
+.feat { padding: clamp(30px, 3.6vw, 46px) 0; border-bottom: 1px solid var(--sumi-18); }
+@media (min-width: 860px) {
+  .feat:nth-child(odd)  { padding-right: clamp(30px, 3.6vw, 52px); border-right: 1px solid var(--sumi-18); }
+  .feat:nth-child(even) { padding-left:  clamp(30px, 3.6vw, 52px); }
+}
+.feat__icon { color: var(--sumi); margin-bottom: 1.1rem; display: block; }
+.feat__kind { font-size: .74rem; font-weight: 700; letter-spacing: .1em; color: var(--sumi-50); display: block; margin-bottom: 1rem; }
+
+/* ---------- スケジュール ---------- */
+.tl { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--sumi-18); }
+.tl li { position: relative; padding: 0 0 clamp(40px, 5vw, 60px) clamp(26px, 4vw, 52px); }
+.tl li:last-child { padding-bottom: 0; }
+.tl li::before {
+  content: ""; position: absolute; left: -4.5px; top: .7em;
+  width: 8px; height: 8px; background: var(--sumi);
+}
+.tl__when {
+  font-family: var(--mincho); font-size: .92rem; font-weight: 700; letter-spacing: .1em;
+  color: var(--sumi-70); display: block; margin-bottom: .45rem;
+}
+
+/* ---------- ページ末の戻り ---------- */
+.pagefoot { border-top: 1px solid var(--sumi-18); padding-top: clamp(32px, 4vw, 48px); }
+</style>
+</head>
+<body>
+
+<div class="plates" aria-hidden="true"></div>
+<div class="edge-rule edge-rule--left"  aria-hidden="true"></div>
+<div class="edge-rule edge-rule--right" aria-hidden="true"></div>
+<div class="tategaki" aria-hidden="true">体験型学習プロジェクト ／ 奈良</div>
+
+<header class="site-header">
+  <div class="sheet site-header__in">
+    <a class="brand" href="web-view.html"><img src="logo-sumi.png" alt="LinkFarm Tech." /></a>
+    <nav class="nav">
+      <a href="services-view.html" aria-current="page">事業内容</a>
+      <a href="organization-view.html">団体概要</a>
+      <a href="members-view.html">メンバー</a>
+      <a href="journal-view.html">活動日誌</a>
+      <a class="btn btn--fill btn--sm" href="contact-view.html">お問い合わせ</a>
+    </nav>
+    <button class="menu-btn" aria-label="メニューを開く">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ 扉 ============ -->
+<section class="door">
+  <div class="sheet">
+    <nav class="crumb" aria-label="パンくず">
+      <a href="web-view.html">LinkFarm Tech.</a>
+      <span aria-hidden="true">／</span>
+      <a href="services-view.html">事業内容</a>
+      <span aria-hidden="true">／</span>
+      <span>体験型学習プロジェクト</span>
+    </nav>
+
+    <span class="door__no">事業 01</span>
+    <p class="door__en">EXPERIENCE-BASED LEARNING</p>
+
+    <h1 class="display">
+      学生と創る、<br />あなたとの一年と、<span class="ul">この一皿</span>。
+    </h1>
+
+    <p class="lead">
+      若年層の獲得と耕作放棄地活用のための体験型学習プロジェクト。奈良県内の使われていない農地を借り、田植えから収穫、食事までを一本の物語として設計しています。2026年度 奈良市 産学官連携プラットフォーム 補助金の採択事業です。
+    </p>
+
+    <figure class="plate door__plate">
+      <img src="../../src/assets/hero/hero-02.jpg"
+           alt="草を刈り整えた耕作地と、その先に広がる奈良の里山の集落" />
+      <figcaption class="plate__cap">
+        <span>プロジェクトのフィールド — 奈良県内の提携農地</span>
+        <span>2026</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ § 01 課題 ============ -->
+<section id="problem" class="section section--band">
+  <div class="sheet spread">
+    <div class="hashira">
+      <span class="hashira__no">§ 01</span>
+      <span class="hashira__en">CHALLENGES</span>
+      <span class="hashira__ja">課題</span>
+    </div>
+
+    <div>
+      <h2 class="h2">私たちが直面する<br /><span class="ul">農業のリアルな課題</span>。</h2>
+
+      <div class="stats" style="margin-top:clamp(40px,5vw,64px)">
+        <div class="stat">
+          <span class="stat__label">農業従事者数（奈良県）</span>
+          <h3 class="stat__title">全国で極めて低い水準</h3>
+          <p class="stat__fig">
+            <span class="stat__num">36</span>
+            <span class="stat__unit">位</span>
+            <span class="stat__of">全国都道府県中</span>
+          </p>
+          <p class="stat__sub">人口100人当たりわずか <b>1.43</b> 人</p>
+          <p class="body">
+            奈良県の農業従事者は全国的にみてもかなり低い水準にあります。若年層の新規就農者が少なく、今後の農業基盤の維持には早急な増加が強く望まれています。
+          </p>
+          <p class="stat__src">出典: 農林水産省, e-Stat, 農業構造動態調査 (2016)</p>
+        </div>
+
+        <div class="stat">
+          <span class="stat__label">経営耕作地面積</span>
+          <h3 class="stat__title">小規模な農地と休耕地の増加</h3>
+          <p class="stat__fig">
+            <span class="stat__num">42</span>
+            <span class="stat__unit">位</span>
+            <span class="stat__of">全国都道府県中</span>
+          </p>
+          <p class="stat__sub">販売農家1戸当たりわずか <b>0.94</b> ha</p>
+          <p class="body">
+            耕作地面積も全国42位と非常に小さく、滋賀や京都などの近隣県と比較しても低い水準です。土地が細分化されており、担い手不足による耕作放棄地の増加が深刻化しています。
+          </p>
+          <p class="stat__src">出典: 奈良県, 第一編 データの分析編 (2020)</p>
+        </div>
+      </div>
+
+      <div class="voices">
+        <h3 class="h3">日々の生活から聞こえる、課題を身近に感じる声</h3>
+        <div class="voice-grid">
+          <div class="voice">
+            <p class="voice__who">私の友人（19歳）</p>
+            <span class="voice__role">若年層の認識</span>
+            <p class="voice__q">「奈良県の有名な農作物って言われても、何かあんまり思い浮かばないし、そもそも普段意識したことないかもな…」</p>
+          </div>
+          <div class="voice">
+            <p class="voice__who">近所のご年配の方</p>
+            <span class="voice__role">農地の現状</span>
+            <p class="voice__q">「近くの畑、自分も高齢になってきて、もう長いこと使ってないんよ。でも誰も継いでくれんから、荒れ放題になっとるんや…」</p>
+          </div>
+        </div>
+
+        <p class="conclusion">
+          若年層を代表とする、これからの「農業従事者」を集め、耕作放棄地を活用する仕組みが必要です。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ § 02 仕組み ============ -->
+<section id="cycle" class="section">
+  <div class="sheet spread">
+    <div class="hashira">
+      <span class="hashira__no">§ 02</span>
+      <span class="hashira__en">THE CYCLE</span>
+      <span class="hashira__ja">仕組み</span>
+    </div>
+
+    <div>
+      <h2 class="h2">農作物の生まれから終わりまで全てを知る、<br /><span class="ul">「体験型学習」の仕組み</span>。</h2>
+
+      <div class="cycles" style="margin-top:clamp(40px,5vw,64px)">
+        <div class="cyc cyc--old">
+          <p class="cyc__kind">Conventional ／ 従来のサイクル</p>
+          <h3 class="cyc__h">生産と消費の分断</h3>
+          <p class="cyc__p">
+            食べる人は、自分が食べる野菜が「誰に、どうやって育てられたか」を知ることができず、単なる「商品」として消費します。
+          </p>
+          <ol class="steps">
+            <li><div><h4>田植え・苗植え</h4><p>農家さんだけで行う栽培の開始</p></div></li>
+            <li><div><h4>収穫</h4><p>機械化または人手不足の中での回収</p></div></li>
+            <li><div><h4>小売店</h4><p>スーパーなどに並ぶ無機質な野菜</p></div></li>
+            <li><div><h4>消費</h4><p>食卓での消費（生産背景は一切見えない）</p></div></li>
+          </ol>
+        </div>
+
+        <div class="cyc cyc--new">
+          <p class="cyc__kind">LinkFarm Cycle ／ テックで繋がる新たな関係</p>
+          <h3 class="cyc__h">プロセスそのものを楽しむ</h3>
+          <p class="cyc__p">
+            植えるところから、テックの力を借りた成長の追体験、自分の手での収穫、保持する愛着、そして最後にみんなで食べる喜びまで、一連の物語を体験します。
+          </p>
+          <ol class="steps">
+            <li><div><h4>田植え・苗植え<span class="chip">現地体験</span></h4><p>自分の手で土を触り、苗を植える感動の第一歩</p></div></li>
+            <li><div><h4>成長のフィードバック<span class="chip">Tech機能</span></h4><p>オンラインで成長日記、画像配信、NFTなどで苗の「今」を知る</p></div></li>
+            <li><div><h4>自ら収穫<span class="chip">現地体験</span></h4><p>大きくなった作物を、再び現地に足を運んで自分の手で収穫</p></div></li>
+            <li><div><h4>食事で消費<span class="chip">食事イベント</span></h4><p>収穫したての野菜で料理を作り、仲間と共に味わう最高の瞬間</p></div></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="approach">
+        <div>
+          <h3 class="h3">農業人口減少の解決に向けて</h3>
+          <p class="body">若年層に「楽しさ」や「関心」を届けることで、持続可能で自然な就農希望者の増加サイクルを目指します。</p>
+        </div>
+        <div>
+          <h3 class="h3">耕作放棄地の利活用</h3>
+          <p class="body">使われていない農地を「体験型イベント」のフィールドとして再定義し、新しい需要と価値を創出します。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ § 03 テック機能 ============ -->
+<section id="features" class="section section--band">
+  <div class="sheet spread">
+    <div class="hashira">
+      <span class="hashira__no">§ 03</span>
+      <span class="hashira__en">TECHNOLOGY</span>
+      <span class="hashira__ja">テック機能</span>
+    </div>
+
+    <div>
+      <h2 class="h2">心理的距離を<span class="ul">常に近く保ち続ける</span>テック機能。</h2>
+      <p class="lead" style="margin-bottom:clamp(40px,5vw,64px)">
+        「植えて終わり」にしない。デジタル技術を活用して、離れていても自分の作物の成長をリアルタイムに感じられる仕組みを導入します。
+      </p>
+
+      <div class="feats">
+        <div class="feat">
+          <svg class="feat__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3 class="h3">成長段階の定期配信</h3>
+          <span class="feat__kind">動画配信・画像配信</span>
+          <p class="body">農園に設置したカメラから、定期的に成長の様子を動画や写真で発信。視覚的アプローチによって、農作物の成長を生き生きと感じられます。</p>
+        </div>
+
+        <div class="feat">
+          <svg class="feat__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3 class="h3">作物のデータ取得・送信</h3>
+          <span class="feat__kind">農家日誌・コラム発信</span>
+          <p class="body">現地農家さんの日々の管理データや裏話コラムを配信。定期的に届くニュースレターを通じて、まるで自分の庭のように親近感が高まります。</p>
+        </div>
+
+        <div class="feat">
+          <svg class="feat__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3 class="h3">作物データのNFT化</h3>
+          <span class="feat__kind">唯一無二のデジタル証明</span>
+          <p class="body">自分が育てた作物の品種や成長ログをブロックチェーン上に記録しNFT化。この世界に1つだけの愛着を、デジタルな「持ち物」として保管できます。</p>
+        </div>
+
+        <div class="feat">
+          <svg class="feat__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3 class="h3">LINEスタンプ作成</h3>
+          <span class="feat__kind">日常に寄り添うキャラクター</span>
+          <p class="body">育てた作物の形や個性をもとにした可愛いイラストスタンプを制作。毎日のチャットを通じて、プロジェクト体験が日常に溶け込みます。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ § 04 スケジュール ============ -->
+<section id="schedule" class="section">
+  <div class="sheet spread">
+    <div class="hashira">
+      <span class="hashira__no">§ 04</span>
+      <span class="hashira__en">TIMELINE</span>
+      <span class="hashira__ja">年間スケジュール</span>
+    </div>
+
+    <div>
+      <h2 class="h2">本年の活動スケジュール。</h2>
+      <p class="lead" style="margin-bottom:clamp(48px,6vw,80px)">
+        準備期間から作物の成長、収穫イベント、さらには座学まで、1年間を通じた体験プログラムの流れをご紹介します。
+      </p>
+
+      <ol class="tl">
+        <li>
+          <span class="tl__when">7月 — 9月</span>
+          <h3 class="h3">準備・協賛募集</h3>
+          <p class="body">体験型学習プログラムの開始に向けて、フィールドとなる耕作放棄地の整備、機材の調達、そして協賛パートナーの募集を行います。最初の基盤を作る大切な準備期間です。</p>
+        </li>
+        <li>
+          <span class="tl__when">9月 — 翌年2月</span>
+          <h3 class="h3">田植え・苗植え &amp; 成長配信</h3>
+          <p class="body">いよいよ農作業の開始！現地に集まって田植えや野菜の苗植えを実施します。その後はテック機能をフル活用し、離れた場所からでもスマホを通して作物の成長を日々見守ります。</p>
+        </li>
+        <li>
+          <span class="tl__when">10月頃 —</span>
+          <h3 class="h3">奈良の農業講座</h3>
+          <p class="body">単に育てるだけでなく、農業の歴史や奈良県独自の農作物の魅力、さらには持続可能なスマート農業技術を座学形式で学ぶ講座を開催します。</p>
+        </li>
+        <li>
+          <span class="tl__when">翌年2月</span>
+          <h3 class="h3">収穫 &amp; 食事イベント</h3>
+          <p class="body">ついに迎える実りの秋・冬の収穫！自分たちで育て上げた野菜を収穫し、その場や食事会でみんなで調理して味わいます。自分で育てたからこその、唯一無二の美味しさを仲間と分かち合います。</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============ お問い合わせ ============ -->
+<section id="contact" class="section">
+  <div class="sheet spread">
+    <div class="hashira">
+      <span class="hashira__no">§ 05</span>
+      <span class="hashira__en">CONTACT</span>
+      <span class="hashira__ja">お問い合わせ</span>
+    </div>
+
+    <div class="ink">
+      <div>
+        <h2>この事業に、<span class="ul">参加・協賛</span>しませんか？</h2>
+        <p>
+          奈良の豊かな大自然と、現代のテクノロジー。これらを掛け合わせることで、若者が集まり、耕作放棄地が再び息を吹き返す。そんなワクワクする未来を、私たちと一緒に作りましょう。
+        </p>
+        <div class="cta-row">
+          <a class="btn btn--fill"  href="contact-view.html">この事業について相談する</a>
+          <a class="btn btn--plain" href="services-view.html">他の事業を見る</a>
+        </div>
+      </div>
+      <div class="ink__img">
+        <img src="../../src/assets/hero/hero-01.jpg" alt="プロジェクトの活動報告を発表している様子" />
+      </div>
+    </div>
+
+    <div class="pagefoot" style="grid-column:1/-1;margin-top:clamp(48px,6vw,72px)">
+      <a class="arrow-link" href="services-view.html">
+        <span>事業内容の一覧へ戻る</span>
+        <span class="arrow-link__ar" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="sheet">
+    <div class="foot-grid">
+      <div>
+        <h2 class="brand brand--foot"><img src="logo-sumi.png" alt="LinkFarm Tech." /></h2>
+        <p>農業とデジタル技術を掛け合わせ、若年層の農業関心を高めるとともに、耕作放棄地の活性化を目指しています。</p>
+      </div>
+
+      <div>
+        <h3>MENU</h3>
+        <ul>
+          <li><a href="services-view.html">事業内容</a></li>
+          <li><a href="project-view.html">体験型学習プロジェクト</a></li>
+          <li><a href="organization-view.html">団体概要</a></li>
+          <li><a href="members-view.html">メンバー</a></li>
+          <li><a href="journal-view.html">活動日誌</a></li>
+          <li><a href="contact-view.html">お問い合わせ</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>LOCATION &amp; CONTACT</h3>
+        <p>
+          活動拠点：奈良県内の提携農地（耕作放棄地）<br />
+          お問い合わせ：office[A]linkfarm-tech.com（[A]を@に変えてください）
+        </p>
+        <div class="sns">
+          <a href="#" aria-label="X">X</a>
+          <a href="#" aria-label="Instagram">IG</a>
+          <a href="#" aria-label="GitHub">GH</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="copy">
+      <span>&copy; 2026 LinkFarm Tech. All rights reserved.</span>
+      <span>2026年度 奈良市 産学官連携プラットフォーム 補助金 採択事業</span>
+    </div>
+  </div>
+</footer>
+
+<script src="mock.js"></script>
+</body>
+</html>

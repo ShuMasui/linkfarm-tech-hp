@@ -1,203 +1,146 @@
 ---
-import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import Hero from '../components/Hero.astro';
-import Problem from '../components/Problem.astro';
-import CycleCompare from '../components/CycleCompare.astro';
-import FeedbackFeatures from '../components/FeedbackFeatures.astro';
-import Timeline from '../components/Timeline.astro';
-import Team from '../components/Team.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
-import FormattedDate from '../components/FormattedDate.astro';
+import Page from '../layouts/Page.astro';
+import Plate from '../components/Plate.astro';
+import Hashira from '../components/Hashira.astro';
+import { SITE_TITLE_FULL, SITE_DESCRIPTION, CONTACT_EMAIL } from '../consts';
+import heroField from '../assets/hero/hero-02.jpg';
 
-// ブログ記事の取得とソート
-const posts = (await getCollection('blog')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
-const latestPosts = posts.slice(0, 3);
+// トップは表紙と目次に徹する。想定読者が5種類いるため、
+// 誰が来ても2クリック以内に目的へ降りられることを唯一の仕事とする。
+// → docs/01-overview.md 第4節
+const TOC = [
+  {
+    no: '01', en: 'SERVICES', ja: '事業内容', href: '/services/',
+    desc: '現地の体験を設計する仕事、提携農家様と学生をつなぐ仕事、そして活動を届けるWeb制作。',
+  },
+  {
+    no: '02', en: 'ORGANIZATION', ja: '団体概要', href: '/organization/',
+    desc: '奈良の学生二人で動かしている団体です。設立、代表者、活動拠点。',
+  },
+  {
+    no: '03', en: 'MEMBERS', ja: 'メンバー', href: '/members/',
+    desc: 'テクノロジーと農業を、一人ずつ持ち寄っています。',
+  },
+  {
+    no: '04', en: 'JOURNAL', ja: '活動日誌', href: '/blog/',
+    desc: '現場で起きたことと、作物の成長記録。',
+  },
+  {
+    no: '05', en: 'CONTACT', ja: 'お問い合わせ', href: '/contact/',
+    desc: '参加・協賛、農地の連携、制作のご相談。',
+  },
+];
+
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'LinkFarm Tech.',
+  url: 'https://linkfarm-tech.com',
+  logo: 'https://linkfarm-tech.com/favicon.svg',
+  description: SITE_DESCRIPTION,
+  email: CONTACT_EMAIL,
+  foundingDate: '2026-05-01',
+  address: {
+    '@type': 'PostalAddress',
+    addressRegion: '奈良県',
+    addressLocality: '奈良市',
+    addressCountry: 'JP',
+  },
+  keywords: [
+    'HP', 'メインページ', 'なら', '奈良', '学生', '補助金', '情報化システム',
+    '農業', 'インバウンド', '体験型アクティビティ', '楽しい', 'シビックテック',
+    '奈良市', '産学連携', 'LinkFarm Tech.',
+  ],
+  founder: [
+    {
+      '@type': 'Person',
+      name: 'Shu MASUI',
+      jobTitle: '学生代表 / Co-Founder & Technology Lead',
+      description:
+        'スマート農業技術、NFT、配信システム、およびスタンプ生成など、プロジェクトのテック基盤の設計・開発全般と全体の進行管理を担当。',
+      affiliation: { '@type': 'EducationalOrganization', name: '奈良工業高等専門学校' },
+    },
+    {
+      '@type': 'Person',
+      name: 'Ryosuke TANIGAWA',
+      jobTitle: '専門技術代表 / Co-Founder & Agriculture/Culinary Lead',
+      description:
+        '現地での栽培計画、作物の状態管理、および収穫後の食事イベントのメニュー考案・調理監修を担当。',
+      affiliation: { '@type': 'EducationalOrganization', name: '天理大学' },
+    },
+  ],
+};
 ---
 
-<!doctype html>
-<html lang="ja" class="scroll-smooth">
-  <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-    <!-- JSON-LD 構造化データ -->
-    <script type="application/ld+json" is:inline>
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "LinkFarm Tech.",
-        "url": "https://linkfarm-tech.com",
-        "logo": "https://linkfarm-tech.com/favicon.svg",
-        "description": "農業×テックで創る、若年層の獲得と耕作放棄地活用のための体験型学習プロジェクト。",
-        "keywords": ["HP", "メインページ", "なら", "奈良", "学生", "補助金", "情報化システム", "農業", "インバウンド", "体験型アクティビティ", "楽しい", "シビックテック", "奈良市", "産学連携", "LinkFarm Tech."],
-        "founder": [
-          {
-            "@type": "Person",
-            "name": "Shu MASUI",
-            "jobTitle": "Co-Founder & Technology Lead",
-            "description": "スマート農業技術、NFT、配信システム、およびスタンプ生成など、プロジェクトのテック基盤の設計・開発全般と全体の進行管理を担当。",
-            "affiliation": {
-              "@type": "EducationalOrganization",
-              "name": "奈良工業高等専門学校"
-            }
-          },
-          {
-            "@type": "Person",
-            "name": "Ryosuke TANIGAWA",
-            "jobTitle": "Co-Founder & Agriculture/Culinary Lead",
-            "description": "現地での栽培計画、作物の状態管理、および収穫後の食事イベントのメニュー考案・調理監修を担当。",
-            "affiliation": {
-              "@type": "EducationalOrganization",
-              "name": "天理大学"
-            }
-          }
-        ]
-      }
-    </script>
-  </head>
-  <body class="bg-wheat-light text-wheat-dark font-sans antialiased overflow-x-hidden">
-    <!-- ヘッダー -->
-    <Header />
+<Page
+  title={SITE_TITLE_FULL}
+  description={SITE_DESCRIPTION}
+  tategaki="農業 × テクノロジー ／ 奈良"
+  current="home"
+>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(orgSchema)} slot="head" />
 
-    <main>
-      <!-- 各LPセクション -->
-      <Hero />
-      <Problem />
-      <CycleCompare />
-      <FeedbackFeatures />
-      <Timeline />
-      <Team />
+  <section class="cover">
+    <div class="sheet">
+      <p class="cover__eyebrow">LINKFARM TECH. — AGRICULTURE × TECHNOLOGY</p>
 
-      <!-- 最新ブログセクション -->
-      <section class="py-24 bg-wheat-light/40 relative overflow-hidden">
-        <div class="container mx-auto px-6 relative z-10">
-          <div class="text-center max-w-3xl mx-auto mb-16 scroll-reveal">
-            <span class="text-brand-secondary font-bold text-sm tracking-widest uppercase">Latest News</span>
-            <h2 class="text-3xl md:text-5xl font-extrabold text-wheat-dark mt-2 mb-6">
-              活動日誌 (Blog)
-            </h2>
-            <p class="text-wheat-dark/70">
-              LinkFarm Tech.のリアルタイムな活動の様子や、作物の成長記録をブログで配信しています。
-            </p>
-            <div class="w-20 h-1 bg-gradient-to-r from-brand-secondary to-brand-primary mx-auto rounded-full mt-6"></div>
-          </div>
+      <h1 class="display">
+        農業に、<br /><span class="ul">人が向かう理由</span>をつくる。
+      </h1>
 
-          <!-- ブログカードリスト -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-12">
-            {latestPosts.map((post) => (
-              <article class="bg-white border border-stone-200/50 rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 scroll-reveal flex flex-col justify-between">
-                <div>
-                  <!-- サムネイル -->
-                  <div class="relative aspect-[16/10] overflow-hidden bg-stone-100">
-                    {post.data.heroImage ? (
-                      <Image 
-                        src={post.data.heroImage} 
-                        alt={post.data.title} 
-                        width={720}
-                        height={450}
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                      />
-                    ) : (
-                      <div class="w-full h-full bg-gradient-to-tr from-brand-primary/10 via-brand-accent/10 to-brand-secondary/10 flex items-center justify-center font-bold text-brand-primary/40 text-sm">
-                        No Image
-                      </div>
-                    )}
-                  </div>
-                  <!-- コンテンツ -->
-                  <div class="p-6">
-                    <span class="text-xs text-stone-400 font-semibold uppercase tracking-wider block mb-2">
-                      <FormattedDate date={post.data.pubDate} />
-                    </span>
-                    <h3 class="text-lg font-bold text-wheat-dark mb-3 line-clamp-2 hover:text-brand-primary transition-colors">
-                      <a href={`/blog/${post.id}/`}>{post.data.title}</a>
-                    </h3>
-                    <p class="text-xs text-stone-500 line-clamp-3 leading-relaxed mb-4">
-                      {post.data.description}
-                    </p>
-                  </div>
-                </div>
-                <!-- リンク -->
-                <div class="px-6 pb-6 pt-2 border-t border-stone-100/50">
-                  <a href={`/blog/${post.id}/`} class="text-xs font-bold text-brand-primary hover:text-brand-primary/80 inline-flex items-center gap-1">
-                    続きを読む
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </a>
-                </div>
-              </article>
-            ))}
-          </div>
+      <p class="lead">{SITE_DESCRIPTION}</p>
 
-          <div class="text-center scroll-reveal">
-            <a href="/blog/" class="inline-flex items-center gap-2 px-8 py-3.5 bg-brand-primary text-white font-bold rounded-xl shadow-md hover:bg-brand-primary/95 transition-all">
-              すべての記事を見る
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </section>
+      {/* 今後、現場写真が増えてきた段階で、このヒーローをカルーセル形式に
+          することを検討している。制約は docs/02-design.md 第6節を参照 */}
+      <Plate
+        class="cover__plate"
+        src={heroField}
+        alt="草を刈り整えた耕作地と、その先に広がる奈良の里山の集落"
+        caption="活動フィールド — 奈良県内の提携農地（耕作放棄地）"
+        captionRight="2026"
+        width={2400}
+        height={1350}
+        loading="eager"
+      />
+    </div>
+  </section>
 
-      <!-- CTA (さいごに) セクション -->
-      <section id="contact" class="py-24 bg-white relative overflow-hidden">
-        <!-- 背景色相環グラデーションのオーバーレイ -->
-        <div class="absolute inset-0 bg-gradient-to-tr from-brand-secondary/5 via-brand-primary/5 to-brand-accent/5 opacity-80"></div>
-        <div class="absolute -top-40 left-1/4 w-96 h-96 rounded-full bg-brand-accent/5 blur-3xl animate-pulse"></div>
+  <section class="section">
+    <div class="sheet spread">
+      <Hashira no="目次" en="CONTENTS" ja="このサイトについて" />
 
-        <div class="container mx-auto px-6 relative z-10 text-center max-w-4xl">
-          <div class="scroll-reveal">
-            <span class="text-brand-primary font-bold text-sm tracking-widest uppercase mb-4 block">Join Us</span>
-            <h2 class="text-3xl md:text-5xl font-black text-wheat-dark mb-6 leading-tight">
-              農業の価値を、<span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary">新たな形</span>で提供しませんか？
-            </h2>
-            <p class="text-lg text-wheat-dark/80 mb-10 max-w-2xl mx-auto leading-relaxed">
-              奈良の豊かな大自然と、現代のテクノロジー。これらを掛け合わせることで、若者が集まり、耕作放棄地が再び息を吹き返す。そんなワクワクする未来を、私たちと一緒に作りましょう。
-            </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <a href="mailto:linkfarmtech@gmail.com" class="px-8 py-4 bg-brand-primary text-white font-bold rounded-xl shadow-lg shadow-brand-primary/30 hover:bg-brand-primary/95 transition-all duration-300 transform hover:-translate-y-0.5 w-full sm:w-auto">
-                プロジェクトに参加・協賛する
-              </a>
-              <a href="#cycle" class="px-8 py-4 bg-wheat-light border border-wheat text-wheat-dark font-bold rounded-xl hover:bg-white transition-all duration-300 transform hover:-translate-y-0.5 w-full sm:w-auto">
-                詳しく話を聞く
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+      <nav class="toc" aria-label="目次">
+        {TOC.map((item) => (
+          <a class="toc__row" href={item.href}>
+            <span class="toc__no">§ {item.no}</span>
+            <span class="toc__en">{item.en}</span>
+            <span class="toc__ja">{item.ja}</span>
+            <span class="toc__desc">{item.desc}</span>
+            <span class="toc__ar" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </nav>
+    </div>
+  </section>
+</Page>
 
-    <!-- フッター -->
-    <Footer />
-
-    <!-- スクロール検知によるアニメーション発火用のスクリプト -->
-    <script>
-      const reveals = document.querySelectorAll('.scroll-reveal');
-
-      const revealOnScroll = () => {
-        reveals.forEach((element) => {
-          const windowHeight = window.innerHeight;
-          const elementTop = element.getBoundingClientRect().top;
-          const elementVisible = 80; // 要素が80px見えたら発火
-
-          if (elementTop < windowHeight - elementVisible) {
-            element.classList.add('active');
-          }
-        });
-      };
-
-      // 初期表示チェック
-      window.addEventListener('load', revealOnScroll);
-      // スクロール時にチェック
-      window.addEventListener('scroll', revealOnScroll);
-      
-      // スクロールせずに初期状態で表示されている場合のために即時実行
-      revealOnScroll();
-    </script>
-  </body>
-</html>
+<style>
+  .cover { padding: clamp(72px, 12vw, 148px) 0 clamp(64px, 9vw, 120px); }
+  .cover__eyebrow {
+    font-size: .68rem;
+    font-weight: 500;
+    letter-spacing: .28em;
+    color: var(--color-sumi-50);
+    display: flex;
+    align-items: center;
+    gap: 1.1em;
+    margin-bottom: clamp(32px, 5vw, 56px);
+  }
+  .cover__eyebrow::before {
+    content: "";
+    width: clamp(28px, 4vw, 52px);
+    height: 1px;
+    background: var(--color-sumi);
+    flex: none;
+  }
+</style>

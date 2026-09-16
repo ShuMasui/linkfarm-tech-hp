@@ -1,66 +1,59 @@
 ---
-import { SITE_TITLE } from '../consts';
+import { Image } from 'astro:assets';
+import logo from '../assets/linkfarm-logo-sumi.png';
+import { NAV, CONTACT_NAV, SITE_TITLE, type NavKey } from '../consts';
+
+interface Props {
+  /** 現在地。事業詳細ページでは親の 'services' を渡す */
+  current?: NavKey;
+}
+const { current } = Astro.props;
 ---
 
-<header class="sticky top-0 z-50 w-full glass-panel border-b border-wheat/20 transition-all duration-300">
-  <div class="container mx-auto px-6 h-20 flex items-center justify-between">
-    <!-- ロゴ / サイト名 -->
-    <h2>
-      <a href="/" class="text-xl md:text-2xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary">
-        {SITE_TITLE}
-      </a>
-    </h2>
+<header class="site-header">
+  <div class="sheet site-header__in">
+    <a class="brand" href="/">
+      <Image src={logo} alt={SITE_TITLE} width={411} height={75} loading="eager" />
+    </a>
 
-    <!-- デスクトップ ナビゲーション -->
-    <nav class="hidden lg:flex items-center gap-8 text-sm font-bold text-wheat-dark/80">
-      <a href="/#problem" class="hover:text-brand-primary transition-colors">課題</a>
-      <a href="/#cycle" class="hover:text-brand-secondary transition-colors">体験型学習</a>
-      <a href="/#features" class="hover:text-brand-primary transition-colors">テック機能</a>
-      <a href="/#schedule" class="hover:text-brand-accent transition-colors">スケジュール</a>
-      <a href="/#team" class="hover:text-brand-primary transition-colors">チーム</a>
-      <a href="/blog/" class="hover:text-brand-secondary transition-colors">ブログ</a>
-      <a href="/#contact" class="px-5 py-2.5 bg-brand-primary text-white text-xs font-bold rounded-lg shadow-md hover:bg-brand-primary/95 transition-all">
-        参加する
+    <nav class="nav">
+      {NAV.map((item) => (
+        <a href={item.href} aria-current={current === item.key ? 'page' : undefined}>
+          {item.label}
+        </a>
+      ))}
+      <a
+        class="btn btn--fill btn--sm"
+        href={CONTACT_NAV.href}
+        aria-current={current === 'contact' ? 'page' : undefined}
+      >
+        {CONTACT_NAV.label}
       </a>
     </nav>
 
-    <!-- モバイルメニュー用ボタン -->
-    <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-xl text-wheat-dark hover:bg-wheat/10 transition-colors" aria-label="Toggle Menu">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7" />
+    <button class="menu-btn" id="menu-btn" aria-label="メニューを開く" aria-expanded="false" aria-controls="mobile-menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round" />
       </svg>
     </button>
   </div>
 
-  <!-- モバイルメニューパネル -->
-  <div id="mobile-menu" class="hidden lg:hidden absolute top-20 left-0 w-full bg-white/95 border-b border-stone-200/50 p-6 flex flex-col gap-4 shadow-lg">
-    <a href="/#problem" class="text-base font-bold text-wheat-dark hover:text-brand-primary py-2 transition-colors">課題</a>
-    <a href="/#cycle" class="text-base font-bold text-wheat-dark hover:text-brand-secondary py-2 transition-colors">体験型学習</a>
-    <a href="/#features" class="text-base font-bold text-wheat-dark hover:text-brand-primary py-2 transition-colors">テック機能</a>
-    <a href="/#schedule" class="text-base font-bold text-wheat-dark hover:text-brand-accent py-2 transition-colors">スケジュール</a>
-    <a href="/#team" class="text-base font-bold text-wheat-dark hover:text-brand-primary py-2 transition-colors">チーム</a>
-    <a href="/blog/" class="text-base font-bold text-wheat-dark hover:text-brand-secondary py-2 transition-colors">ブログ</a>
-    <a href="/#contact" class="px-5 py-3 bg-brand-primary text-white text-center font-bold rounded-xl shadow-md hover:bg-brand-primary/95 transition-all mt-2">
-      参加する
-    </a>
+  <div class="mobile-menu" id="mobile-menu" data-open="false">
+    <div class="sheet">
+      {NAV.map((item) => <a href={item.href}>{item.label}</a>)}
+      <a href={CONTACT_NAV.href}>{CONTACT_NAV.label}</a>
+    </div>
   </div>
 </header>
 
 <script>
-  const btn = document.getElementById('mobile-menu-btn');
+  const btn = document.getElementById('menu-btn');
   const menu = document.getElementById('mobile-menu');
 
-  if (btn && menu) {
-    btn.addEventListener('click', () => {
-      menu.classList.toggle('hidden');
-    });
-
-    // メニュー内リンクをクリックしたときにメニューを閉じる
-    const links = menu.querySelectorAll('a');
-    links.forEach(link => {
-      link.addEventListener('click', () => {
-        menu.classList.add('hidden');
-      });
-    });
-  }
+  btn?.addEventListener('click', () => {
+    const open = menu?.dataset.open === 'true';
+    if (menu) menu.dataset.open = String(!open);
+    btn.setAttribute('aria-expanded', String(!open));
+    btn.setAttribute('aria-label', !open ? 'メニューを閉じる' : 'メニューを開く');
+  });
 </script>

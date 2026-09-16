@@ -1,10 +1,12 @@
 ---
+// 活動日誌の記事ページ。扉・写真プレート・本文（.prose）の三段で組む。
 import type { CollectionEntry } from 'astro:content';
-import { Image } from 'astro:assets';
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import Page from './Page.astro';
+import PageHead from '../components/PageHead.astro';
+import Plate from '../components/Plate.astro';
+import ArrowLink from '../components/ArrowLink.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_TITLE } from '../consts';
 import { generateBlogPostSchema } from '../utils/schema';
 
 type Props = CollectionEntry<'blog'>['data'];
@@ -24,140 +26,86 @@ const schema = generateBlogPostSchema({
 });
 ---
 
-<!doctype html>
-<html lang="ja" class="scroll-smooth">
-  <head>
-    <BaseHead title={`${title} - LinkFarm Tech.`} description={description} image={heroImage} />
-    <!-- JSON-LD 構造化データ -->
-    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-  </head>
+<Page
+  title={`${title} — ${SITE_TITLE}`}
+  description={description}
+  tategaki="活動日誌 ／ LinkFarm Tech."
+  current="journal"
+  image={heroImage}
+>
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
 
-  <body class="bg-wheat-light text-wheat-dark font-sans antialiased overflow-x-hidden">
-    <!-- ヘッダー -->
-    <Header />
+  <PageHead no="04" en="JOURNAL" crumb={title} parent={{ label: '活動日誌', href: '/blog/' }}>
+    <span slot="title">{title}</span>
 
-    <main class="py-16 md:py-24">
-      <article class="container mx-auto px-6 max-w-3xl">
-        <!-- 戻るリンク -->
-        <div class="mb-8">
-          <a href="/blog/" class="inline-flex items-center gap-1 text-sm font-bold text-brand-primary hover:text-brand-primary/80 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-            </svg>
-            ブログ一覧に戻る
-          </a>
-        </div>
+    <p class="postmeta">
+      <FormattedDate date={pubDate} />
+      {updatedDate && (
+        <span class="postmeta__upd">更新　<FormattedDate date={updatedDate} /></span>
+      )}
+    </p>
 
-        <!-- 記事ヘッダー情報 -->
-        <header class="mb-12 text-center">
-          <div class="inline-block px-3 py-1 rounded-full bg-wheat border border-wheat-dark/10 text-xs font-bold text-wheat-dark/70 mb-4">
-            <FormattedDate date={pubDate} />
-            {updatedDate && (
-              <span class="ml-2 font-normal text-stone-500">
-                (更新: <FormattedDate date={updatedDate} />)
-              </span>
-            )}
-          </div>
-          
-          {tags && tags.length > 0 && (
-            <div class="flex flex-wrap justify-center gap-1.5 mb-4">
-              {tags.map((tag) => (
-                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-brand-primary/5 text-brand-primary border border-brand-primary/10">
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          )}
-          
-          <h1 class="text-3xl md:text-5xl font-black text-wheat-dark leading-tight mb-6">
-            {title}
-          </h1>
+    {tags.length > 0 && (
+      <div class="tags postmeta__tags">
+        {tags.map((tag) => <span class="tag">{tag}</span>)}
+      </div>
+    )}
 
-          <p class="text-base text-wheat-dark/65 max-w-xl mx-auto italic">
-            {description}
-          </p>
-        </header>
+    <p class="lead postmeta__lead">{description}</p>
+  </PageHead>
 
-        <!-- メインビジュアル -->
-        {heroImage && (
-          <div class="aspect-[16/9] w-full rounded-3xl overflow-hidden shadow-md border border-stone-200/50 mb-12">
-            <Image src={heroImage} alt={title} width={1020} height={510} class="w-full h-full object-cover" />
-          </div>
-        )}
+  <section class="section postbody">
+    <div class="sheet">
+      {heroImage && (
+        <Plate
+          src={heroImage}
+          alt={title}
+          class="postplate"
+          width={1200}
+          height={750}
+          loading="eager"
+        />
+      )}
 
-        <!-- 記事本文 -->
-        <div class="prose prose-stone max-w-none text-wheat-dark/80 leading-relaxed text-lg space-y-6">
-          <slot />
-        </div>
-      </article>
-    </main>
+      <div class="prose">
+        <slot />
+      </div>
 
-    <!-- フッター -->
-    <Footer />
-  </body>
-</html>
+      <div class="nextpage">
+        <ArrowLink href="/blog/">活動日誌の一覧へ戻る</ArrowLink>
+      </div>
+    </div>
+  </section>
+</Page>
 
-<style is:global>
-  /* マークダウン本文用の簡易プロセスタイル (Tailwind Typographyが無い場合のフォールバック) */
-  .prose h2 {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: #3d2b1f;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid rgba(245, 222, 179, 0.4);
+<style>
+  /* 扉に添える日付と更新日。小さい字なので本文側の書体を使う
+     （--mincho は存在しない変数だった） */
+  .postmeta {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--color-sumi-50);
+    margin: 0 0 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.4em;
   }
-  .prose h3 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #3d2b1f;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
+  .postmeta__upd {
+    color: var(--color-sumi-35);
   }
-  .prose p {
-    margin-bottom: 1.5rem;
+  .postmeta__tags {
+    margin-bottom: 1.4rem;
   }
-  .prose ul, .prose ol {
-    margin-left: 1.5rem;
-    margin-bottom: 1.5rem;
-    list-style-type: disc;
+  .postmeta__lead {
+    margin: 0;
   }
-  .prose li {
-    margin-bottom: 0.5rem;
+  /* 扉のリード文のすぐ下に写真を置くので、セクションの上パディングは要らない。
+     .pagehead 側の下パディングだけで間を取る */
+  .postbody {
+    padding-top: 0;
   }
-  .prose blockquote {
-    border-left: 4px solid #4f46e5;
-    padding-left: 1.5rem;
-    color: #57534e;
-    font-style: italic;
-    margin: 1.5rem 0;
-  }
-  .prose a {
-    color: #4f46e5;
-    text-decoration: underline;
-    font-weight: 600;
-  }
-  .prose a:hover {
-    color: #3b82f6;
-  }
-  .prose code {
-    background: #f5deb3;
-    padding: 0.2rem 0.4rem;
-    border-radius: 0.25rem;
-    font-size: 0.9em;
-  }
-  .prose pre {
-    background: #2d3436;
-    color: #fdfaf2;
-    padding: 1.5rem;
-    border-radius: 1rem;
-    overflow-x: auto;
-    margin-bottom: 1.5rem;
-  }
-  .prose pre code {
-    background: transparent;
-    padding: 0;
-    color: inherit;
-  }
+
+  /* .postplate の寸法は global.css にある。
+     Plate は子コンポーネントなので、ここの scoped style は届かない */
 </style>

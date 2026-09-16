@@ -4,7 +4,6 @@
 import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
 import { SITE_TITLE } from '../consts';
-import { Font } from 'astro:assets';
 
 interface Props {
 	title: string;
@@ -37,7 +36,9 @@ const ogImageUrl = typeof image === 'string'
 />
 <meta name="generator" content={Astro.generator} />
 
-<Font cssVariable="--font-atkinson" preload />
+<!-- フォントは public/fonts/ の静的ファイル。@font-face は
+     src/styles/fonts.css にあり、global.css 経由で外部CSSにまとまるため
+     全ページで共有キャッシュされる。head での読み込みは不要 -->
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
