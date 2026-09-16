@@ -1,0 +1,37 @@
+---
+// 全ページ共通の骨組み。head / 紙面の装置 / ヘッダー / フッター。
+import type { ImageMetadata } from 'astro';
+import BaseHead from '../components/BaseHead.astro';
+import SiteChrome from '../components/SiteChrome.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import type { NavKey } from '../consts';
+
+interface Props {
+  title: string;
+  description: string;
+  /** 現在地。事業詳細ページでは親の 'services' を渡す */
+  current?: NavKey;
+  /** 右余白の縦組みに出す文言 */
+  tategaki: string;
+  image?: string | ImageMetadata;
+}
+
+const { title, description, current, tategaki, image } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <BaseHead title={title} description={description} image={image} />
+    <slot name="head" />
+  </head>
+  <body>
+    <SiteChrome tategaki={tategaki} />
+    <Header current={current} />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

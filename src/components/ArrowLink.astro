@@ -1,0 +1,16 @@
+---
+// 矢印つきのリンク。矢印は装飾なので独立した span に持たせる。
+interface Props {
+  href: string;
+  /** 行頭の番号（例: '§ 03'） */
+  no?: string;
+  class?: string;
+}
+const { href, no, class: className = '' } = Astro.props;
+---
+
+<a class:list={['arrow-link', className]} href={href}>
+  {no && <span class="arrow-link__no">{no}</span>}
+  <span><slot /></span>
+  <span class="arrow-link__ar" aria-hidden="true">→</span>
+</a>

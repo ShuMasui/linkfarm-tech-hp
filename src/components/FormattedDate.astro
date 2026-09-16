@@ -1,17 +1,18 @@
 ---
+// 日付表示。紙面の表記は和暦まじりにせず「2026年8月2日」で統一する。
 interface Props {
-	date: Date;
+  date: Date;
 }
 
 const { date } = Astro.props;
 ---
 
 <time datetime={date.toISOString()}>
-	{
-		date.toLocaleDateString('en-us', {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric',
-		})
-	}
+  {
+    date.toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  }
 </time>

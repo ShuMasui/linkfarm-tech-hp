@@ -1,0 +1,140 @@
+---
+// 事業内容の一覧。基本事業（農関係 01/02）と関連事業（Web制作 03）という
+// 階層を、組見出し（.biz-group）で紙面上の区分として見せる。
+// → docs/mocks/services-view.html
+import Page from '../../layouts/Page.astro';
+import PageHead from '../../components/PageHead.astro';
+import Plate from '../../components/Plate.astro';
+import ArrowLink from '../../components/ArrowLink.astro';
+import { SITE_TITLE } from '../../consts';
+import satoyama from '../../assets/hero/hero-03.jpg';
+import sharing from '../../assets/hero/hero-01.jpg';
+import narative from '../../assets/blogshero/20260802_narative-hp-help.png';
+
+const description =
+  '現地での体験を設計する仕事と、提携農家様と学生をつなぐ仕事。この二本が基本事業です。そこで培った技術を、地域の活動を届けるWeb制作へ広げています。';
+---
+
+<Page
+  title={`事業内容 — ${SITE_TITLE}`}
+  description={description}
+  tategaki="事業内容 ／ LinkFarm Tech."
+  current="services"
+>
+  <PageHead no="01" en="SERVICES" crumb="事業内容">
+    <Fragment slot="title">私たちの仕事は、<span class="ul">農から始まる</span>。</Fragment>
+    <p class="lead">{description}</p>
+  </PageHead>
+
+  <section class="section">
+    <div class="sheet">
+      <div class="biz-group">
+        <span class="biz-group__ja">基本事業</span>
+        <span class="biz-group__en">AGRICULTURE</span>
+        <span class="biz-group__rule" aria-hidden="true"></span>
+      </div>
+
+      <article class="biz">
+        <div class="biz__head">
+          <span class="biz__no">01</span>
+          <span class="biz__en">EXPERIENCE-BASED LEARNING</span>
+        </div>
+        <div class="biz__grid">
+          <div>
+            <h2 class="h3">学生と創る、あなたとの一年と、<span class="ul">この一皿</span>。</h2>
+            <p class="body biz__body">
+              若年層の獲得と耕作放棄地活用のための体験型学習プロジェクト。田植えから収穫、食事までを一本の物語として設計し、離れている期間はテクノロジーで作物との距離をつなぎます。2026年度
+              奈良市 産学官連携プラットフォーム 補助金の採択事業です。
+            </p>
+            <ul class="points">
+              <li>現地での田植え・苗植えと収穫の体験プログラム運営</li>
+              <li>成長配信・NFT・LINEスタンプによる継続的な接点づくり</li>
+              <li>耕作放棄地をイベントフィールドとして再定義する取り組み</li>
+            </ul>
+            <p class="biz__more">
+              <ArrowLink href="/services/experience-learning/">事業の詳細を見る</ArrowLink>
+            </p>
+          </div>
+          <Plate
+            src={satoyama}
+            alt="奈良の里山を流れる川と杉林"
+            caption="活動地周辺の里山"
+            date="2026/05/01"
+          />
+        </div>
+      </article>
+
+      <article class="biz">
+        <div class="biz__head">
+          <span class="biz__no">02</span>
+          <span class="biz__en">KNOWLEDGE EXCHANGE</span>
+        </div>
+        <div class="biz__grid">
+          <div>
+            <h2 class="h3">農家の困りごとに、<span class="ul">学生の人脈</span>で応える。</h2>
+            <p class="body biz__body">
+              提携農家様が抱える人材問題などに関して、運営を始めとして、ボランティア派遣などを学生の人脈を通して行います。一方的な支援ではなく共創しながら、関わる人が全員笑顔になることを目指します。
+            </p>
+            <ul class="points">
+              <li>提携農家様の人手の課題をうかがい、必要な体制を整える</li>
+              <li>学生ネットワークを通じたボランティアの募集と派遣</li>
+              <li>現場で得た知識と技術を、農家様と学生の双方に還元する</li>
+            </ul>
+            <p class="biz__more">
+              <ArrowLink href="/contact/">連携について相談する</ArrowLink>
+            </p>
+          </div>
+          <Plate
+            src={sharing}
+            alt="プロジェクトの取り組みを説明している様子"
+            caption="活動の共有と意見交換の場"
+            date="2026/09/05"
+          />
+        </div>
+      </article>
+
+      <div class="biz-group biz-group--sub">
+        <span class="biz-group__ja">関連事業</span>
+        <span class="biz-group__en">DERIVED FROM THE FIELD</span>
+        <span class="biz-group__rule" aria-hidden="true"></span>
+      </div>
+
+      <article class="biz">
+        <div class="biz__head">
+          <span class="biz__no">03</span>
+          <span class="biz__en">WEB &amp; TECHNOLOGY</span>
+        </div>
+        <div class="biz__grid">
+          <div>
+            <h2 class="h3">地域の活動に、<span class="ul">届くかたち</span>を与える。</h2>
+            <p class="body biz__body">
+              自分たちのプロジェクトで培ったWeb・デジタル技術を、同じく地域で動く団体に提供しています。一般社団法人NARATIVE様の公式サイト（narative.org）では、Webデザインと技術アシストを担当しました。
+            </p>
+            <ul class="points">
+              <li>コーポレートサイト・活動サイトのデザインと実装</li>
+              <li>静的サイト構成・CI/CD・公開基盤の整備</li>
+              <li>公開後の運用にあわせた技術アシスト</li>
+            </ul>
+            <p class="biz__more">
+              <ArrowLink href="/blog/">制作事例を活動日誌で読む</ArrowLink>
+            </p>
+          </div>
+          <Plate
+            src={narative}
+            alt="一般社団法人NARATIVE様の公式サイト制作支援"
+            caption="NARATIVE様 公式サイト制作支援"
+            date="2026/08/01"
+            fit={true}
+          />
+        </div>
+      </article>
+    </div>
+  </section>
+</Page>
+
+<style>
+  /* モックではインライン style で指定していた余白。紙面の組みの一部なので
+     クラスに起こしてこのページの scoped style に持たせる */
+  .biz__body { margin-top: 1rem; }
+  .biz__more { margin: 2.2rem 0 0; }
+</style>

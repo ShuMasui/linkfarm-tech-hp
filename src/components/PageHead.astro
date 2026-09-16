@@ -1,0 +1,47 @@
+---
+// 下層ページの扉。パンくず・丁付け・大見出し・リード。
+interface Props {
+  /** 丁付け（例: '02'） */
+  no: string;
+  /** 欧文ラベル（例: 'ORGANIZATION'） */
+  en: string;
+  /** パンくずの末尾に出すページ名 */
+  crumb: string;
+  /** パンくずの中間階層（任意） */
+  parent?: { label: string; href: string };
+  /**
+   * サイトの節ではなく「事業」の扉として組む場合の見出し（例: '事業 01'）。
+   * 渡すと丁付け（§ 01）の代わりに wheat のチップで出す。
+   * → docs/mocks/project-view.html の扉
+   */
+  chip?: string;
+}
+const { no, en, crumb, parent, chip } = Astro.props;
+---
+
+<section class="pagehead">
+  <div class="sheet">
+    <nav class="crumb" aria-label="パンくず">
+      <a href="/">LinkFarm Tech.</a>
+      <span aria-hidden="true">／</span>
+      {parent && (
+        <>
+          <a href={parent.href}>{parent.label}</a>
+          <span aria-hidden="true">／</span>
+        </>
+      )}
+      <span>{crumb}</span>
+    </nav>
+
+    {chip ? (
+      <>
+        <span class="pagehead__chip">{chip}</span>
+        <p class="pagehead__en">{en}</p>
+      </>
+    ) : (
+      <p class="pagehead__no">§ {no}　<span>{en}</span></p>
+    )}
+    <h1 class="display"><slot name="title" /></h1>
+    <slot />
+  </div>
+</section>

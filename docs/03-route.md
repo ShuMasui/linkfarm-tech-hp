@@ -6,9 +6,9 @@ URL の設計と、Astro のファイル配置との対応を定義する。
 
 ## 1. 方針
 
-**1ページのLPから、階層を持つコーポレートサイトへ移行する。**
+**1ページのLPから、階層を持つ団体サイトへ移行する。**
 
-旧構成はトップ1枚にすべてのセクションを積み、アンカーリンク（`/#problem` など）で移動していた。新構成では、会社としての情報（事業・概要・メンバー・日誌・連絡先）をそれぞれ独立したページに分け、トップは**表紙と目次**に徹する。
+旧構成はトップ1枚にすべてのセクションを積み、アンカーリンク（`/#problem` など）で移動していた。新構成では、団体としての情報（事業・概要・メンバー・日誌・連絡先）をそれぞれ独立したページに分け、トップは**表紙と目次**に徹する。
 
 理由は [01-overview.md](./01-overview.md) にある通り、想定読者が5種類いるため。誰が来ても2クリック以内に目的へ降りられることを、トップの唯一の仕事とする。
 
@@ -28,7 +28,7 @@ URL の設計と、Astro のファイル配置との対応を定義する。
 | `/` | トップ（表紙＋目次） | — | `src/pages/index.astro` | `web-view.html` |
 | `/services/` | 事業内容 | 01 | `src/pages/services/index.astro` | `services-view.html` |
 | `/services/experience-learning/` | 体験型学習プロジェクト 詳細 | — | `src/pages/services/experience-learning.astro` | `project-view.html` |
-| `/company/` | 会社概要 | 02 | `src/pages/company/index.astro` | `company-view.html` |
+| `/organization/` | 団体概要 | 02 | `src/pages/organization/index.astro` | `organization-view.html` |
 | `/members/` | メンバー | 03 | `src/pages/members/index.astro` | `members-view.html` |
 | `/blog/` | 活動日誌 一覧 | 04 | `src/pages/blog/index.astro` | `journal-view.html` |
 | `/blog/<slug>/` | 活動日誌 記事 | — | `src/pages/blog/[...slug].astro` | （既存レイアウトを流用） |
@@ -42,7 +42,7 @@ URL の設計と、Astro のファイル配置との対応を定義する。
 /
 ├── /services/
 │   └── /services/experience-learning/
-├── /company/
+├── /organization/
 ├── /members/
 ├── /blog/
 │   └── /blog/<slug>/
@@ -121,7 +121,7 @@ UIラベルは「活動日誌」だが、**URLは `/blog/` を変えない。**
 ### グローバルナビ（ヘッダー）
 
 ```
-[ロゴ]        事業内容  会社概要  メンバー  活動日誌  [お問い合わせ]
+[ロゴ]        事業内容  団体概要  メンバー  活動日誌  [お問い合わせ]
 ```
 
 - 現在のページに `aria-current="page"` を付け、焦茶の下線で示す
@@ -141,7 +141,7 @@ LinkFarm Tech. ／ 事業内容 ／ 体験型学習プロジェクト
 下層ページの末尾に、次の節への送りを置く。目次に戻らずに読み進められるようにするため。
 
 ```
-/company/  → § 03 メンバーを見る
+/organization/  → § 03 メンバーを見る
 /members/  → § 04 活動日誌を読む
 /blog/     → § 05 お問い合わせへ
 ```
@@ -158,11 +158,12 @@ LinkFarm Tech. ／ 事業内容 ／ 体験型学習プロジェクト
 
 ### `<title>`
 
-```
-<ページ名> — LinkFarm Tech.
-```
+| ページ | `<title>` |
+|---|---|
+| `/` | `LinkFarm Tech. Official HP` |
+| その他 | `<ページ名> — LinkFarm Tech.` |
 
-トップのみ `LinkFarm Tech. — 農業に、人が向かう理由をつくる。` とする。
+定数は `src/consts.ts` の `SITE_TITLE_FULL`（トップ専用）と `SITE_TITLE`（団体名）に分けてある。**`SITE_TITLE` はロゴの `alt` とコピーライトにも使われている**ので、こちらを「Official HP」付きに変えてはいけない。
 
 ### 構造化データ（JSON-LD）
 
@@ -180,7 +181,7 @@ LinkFarm Tech. ／ 事業内容 ／ 体験型学習プロジェクト
 
 ### RSS
 
-`/rss.xml` は活動日誌のみを対象とする。事業ページや会社概要は含めない。
+`/rss.xml` は活動日誌のみを対象とする。事業ページや団体概要は含めない。
 
 ---
 

@@ -1,0 +1,60 @@
+---
+// § 03 メンバー。二人体制であることを隠さず、担当範囲で信頼を担保する。
+import { Image } from 'astro:assets';
+import Page from '../../layouts/Page.astro';
+import PageHead from '../../components/PageHead.astro';
+import ArrowLink from '../../components/ArrowLink.astro';
+import masui from '../../assets/team-profile-masui.jpg';
+import tanigawa from '../../assets/team-profile-tanigawa.jpg';
+---
+
+<Page
+  title="メンバー — LinkFarm Tech."
+  description="プロジェクトの実現可能性を、私たちは人で担保します。テクノロジー領域を担う学生代表と、農業・料理を担う専門技術代表の二人。"
+  tategaki="メンバー ／ LinkFarm Tech."
+  current="members"
+>
+  <PageHead no="03" en="MEMBERS" crumb="メンバー">
+    <Fragment slot="title">テクノロジーと農業を、<br /><span class="ul">一人ずつ持ち寄る</span>。</Fragment>
+    <p class="lead">プロジェクトの実現可能性を、私たちは人で担保します。</p>
+  </PageHead>
+
+  <section class="section">
+    <div class="sheet">
+      <div class="members">
+        <div class="member">
+          <Image src={masui} alt="Shu MASUI" width={104} height={138} />
+          <div>
+            <span class="member__school">奈良工業高等専門学校（19歳）</span>
+            <h2 class="h3 member__name">Shu MASUI</h2>
+            <p class="member__role">学生代表／担当：テクノロジー領域・プロジェクトマネジメント</p>
+            <p class="member__bio">
+              スマート農業技術、NFT、配信システム、およびスタンプ生成など、プロジェクトのテック基盤の設計・開発全般と全体の進行管理を担当します。
+            </p>
+          </div>
+        </div>
+
+        <div class="member">
+          <Image src={tanigawa} alt="Ryosuke TANIGAWA" width={104} height={138} />
+          <div>
+            <span class="member__school">天理大学（20歳）</span>
+            <h2 class="h3 member__name">Ryosuke TANIGAWA</h2>
+            <p class="member__role">専門技術代表／担当：農業・料理</p>
+            <p class="member__bio">
+              現地での栽培計画、作物の状態管理、および収穫後の食事イベントのメニュー考案・調理監修を担当します。美味しく楽しい体験の要です。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="nextpage">
+        <ArrowLink href="/blog/" no="§ 04">活動日誌を読む</ArrowLink>
+      </div>
+    </div>
+  </section>
+</Page>
+
+<style>
+  /* 氏名のすぐ下に所属・担当が続くので、見出しの下余白は殺す */
+  .member__name { margin-bottom: 0; }
+</style>

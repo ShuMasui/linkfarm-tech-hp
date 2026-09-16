@@ -1,0 +1,59 @@
+---
+// § 02 団体概要。法人格を持たない学生団体なので「会社概要」とは呼ばない。
+// 用語の統一規則は docs/01-overview.md 第6節を参照。
+import Page from '../../layouts/Page.astro';
+import PageHead from '../../components/PageHead.astro';
+import ArrowLink from '../../components/ArrowLink.astro';
+import { CONTACT_EMAIL_MASKED } from '../../consts';
+---
+
+<Page
+  title="団体概要 — LinkFarm Tech."
+  description="奈良で学ぶ学生二人が、実際に土地を借り、栽培計画を立て、技術基盤を自分たちで組んでいます。LinkFarm Tech. の名称、組織形態、設立、代表者、活動拠点。"
+  tategaki="団体概要 ／ LinkFarm Tech."
+  current="organization"
+>
+  <PageHead no="02" en="ORGANIZATION" crumb="団体概要">
+    <Fragment slot="title">若い二人が、<span class="ul">現場を持っている</span>。</Fragment>
+    <p class="lead">
+      奈良で学ぶ学生二人が、実際に土地を借り、栽培計画を立て、技術基盤を自分たちで組んでいます。構想ではなく、動いている現場があります。
+    </p>
+  </PageHead>
+
+  <section class="section">
+    <div class="sheet">
+      <dl class="deflist">
+        <dt>名称</dt>
+        <dd>LinkFarm Tech.</dd>
+
+        <dt>組織形態</dt>
+        <dd>学生団体（法人格なし）</dd>
+
+        <dt>設立</dt>
+        <dd>2026年5月1日</dd>
+
+        <dt>代表者</dt>
+        <dd>学生代表　増井 崇<br />専門技術代表　谷川 亮介</dd>
+
+        <dt>所在地</dt>
+        <dd>奈良県奈良市</dd>
+
+        <dt>活動拠点</dt>
+        <dd>奈良県内の提携農地（耕作放棄地）</dd>
+
+        <dt>事業内容</dt>
+        <dd>体験型学習プログラムの企画・運営／提携農家様との連携・ボランティア派遣／Web制作・技術支援</dd>
+
+        <dt>実績</dt>
+        <dd>2026年度 奈良市 産学官連携プラットフォーム 補助金 採択</dd>
+
+        <dt>連絡先</dt>
+        <dd>{CONTACT_EMAIL_MASKED}</dd>
+      </dl>
+
+      <div class="nextpage">
+        <ArrowLink href="/members/" no="§ 03">メンバーを見る</ArrowLink>
+      </div>
+    </div>
+  </section>
+</Page>

@@ -7,7 +7,7 @@
 # 詳細は docs/04-web.md を参照。
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev lint test test-watch build preview check clean
+.PHONY: help install dev lint test test-watch build preview check clean fonts
 
 NPX := npx --no-install
 
@@ -50,6 +50,10 @@ preview:
 
 ## check: lint と test と build を順に通す（CI と同じ内容）
 check: lint test build
+
+## fonts: Google Fonts から woff2 を取り込み直す（public/fonts/）
+fonts:
+	node scripts/fetch-fonts.mjs
 
 ## clean: ビルド成果物とキャッシュを削除する
 clean:

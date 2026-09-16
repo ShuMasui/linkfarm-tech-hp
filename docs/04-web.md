@@ -26,20 +26,21 @@ Node.js は **22.12.0 以上**（`package.json` の `engines` で指定）。
 
 このサイトは全ページが静的で、動的な機能を持たない（フォームもログインもない）。ビルド時にHTMLを吐き切れることが要件に対して最も素直であり、JavaScript をクライアントに送る必要がほとんどない。
 
-### Tailwind 4 と設計トークンの関係
+### Tailwind とデザインシステムの関係
 
-デザイントークンは `src/styles/global.css` の `@theme` ブロックに定義する。[02-design.md](./02-design.md) の色・書体はすべてここに集約し、コンポーネント側でハードコードしない。
+**このサイトのデザインシステムは、Tailwind のユーティリティではなく `src/styles/global.css` のコンポーネントクラスで持っている。**
 
-```css
-@theme {
-  --color-washi: #faf8f2;
-  --color-wheat: #f5deb3;
-  --color-sumi:  #3d2b1f;
-  /* … */
-}
-```
+モック（`docs/mocks/mock.css`）を素の CSS として書き、それをほぼそのまま `global.css` へ移植した。ユーティリティクラスへ翻訳し直すと、モックとの視覚的な一致を保証できなくなり、翻訳の過程で必ずずれが生じるため。[02-design.md](./02-design.md) が「実装の正典はモック」と宣言しているのは、この構造を指している。
 
-> **注意** — 旧トークン（`--color-brand-primary` などの indigo / emerald / orange）は新デザインで全廃する。削除する前に、参照している箇所をすべて置き換えること。
+色と書体は `@theme` にも登録してあるので、必要な箇所では `bg-washi` のようなユーティリティも使える。ただし**新しい見た目の規則はユーティリティの寄せ集めではなく、名前のあるクラスとして `global.css` に足すこと。**
+
+旧トークン（`--color-brand-primary` などの indigo / emerald / orange）は全廃済み。
+
+#### 子コンポーネントに scoped style は届かない
+
+Astro のスコープ付きスタイルは、`<style>` を書いたコンポーネントのテンプレート内の要素にしか適用されない。`Plate` のような子コンポーネントが描画する要素（`.cover__plate img` など）は対象外になり、**ビルド後の CSS から黙って消える。**
+
+実装中にこれで表紙の写真の高さ指定が失われた。子コンポーネント内の要素を狙うサイズ指定は `global.css` に置くこと。
 
 ---
 
@@ -119,33 +120,58 @@ make clean      # dist/ と .astro/ を削除
 
 `src/assets/` 配下の画像は `import` して `<Image>` に渡す。ビルド時に WebP へ変換され、ファイル名にハッシュが付く。`public/` に置いた画像は最適化されないため、favicon など例外的なものだけに限る。
 
-### EXIF 回転の正規化（未対応・要実施）
+### EXIF 回転の正規化（対応済み）
 
-現場写真に EXIF の回転情報が入っている。
+現場写真に EXIF の回転情報が入っていたため、**向きを焼き込んで置き換え済み**。
 
-| ファイル | orientation | 実サイズ | ファイルサイズ |
-|---|---|---|---|
-| `hero-01.jpg` | なし | 1567×1045 | 111KB |
-| `hero-02.jpg` | **3（180°）** | 4000×3000 | **5.7MB** |
-| `hero-03.jpg` | **6（90°）** | 4000×3000（実質 3000×4000） | 3.5MB |
+| ファイル | 対応前 | 対応後 |
+|---|---|---|
+| `hero-01.jpg` | 1567×1045 / EXIF なし | 変更なし（86KB に再圧縮） |
+| `hero-02.jpg` | 4000×3000 / orientation=3 / 5.7MB | 2400×1800 / 1.2MB |
+| `hero-03.jpg` | 4000×3000 / orientation=6 / 3.5MB | 1800×2400 / 522KB |
 
-**生のピクセルは回転前の向きで保存されている。** ブラウザは EXIF を尊重するのでモックでは正しく表示されるが、ビルド時の最適化で向きが崩れる可能性がある。
-
-実装時に、向きを焼き込んだファイルへ正規化すること。sharp の `.rotate()` は引数なしで呼ぶと EXIF に従って回転し、その際に EXIF を落とす。
+**新しい写真を追加するときも、必ず同じ正規化を通すこと。** sharp の `.rotate()` は引数なしで呼ぶと EXIF に従って回転し、その際に EXIF を落とす。
 
 ```sh
-# 例：向きを焼き込み、長辺2400pxに縮小して上書きする
 node -e "
 const sharp=require('sharp');
-sharp('src/assets/hero/hero-02.jpg')
-  .rotate()
-  .resize({ width: 2400, withoutEnlargement: true })
-  .jpeg({ quality: 82 })
-  .toFile('src/assets/hero/hero-02.normalized.jpg');
-"
+sharp('src/assets/hero/NEW.jpg')
+  .rotate()                                  // EXIF に従って回転し、EXIF を落とす
+  .resize({ width: 2400, height: 2400, fit: 'inside', withoutEnlargement: true })
+  .jpeg({ quality: 82, mozjpeg: true })
+  .toFile('src/assets/hero/NEW.tmp.jpg');
+" && mv src/assets/hero/NEW.tmp.jpg src/assets/hero/NEW.jpg
 ```
 
-5.7MB の元ファイルをリポジトリに残す必要はないので、正規化と同時に置き換えてよい。
+### フォント
+
+**Google Fonts からダウンロードして、リポジトリに取り込んである。** 実行時はもちろん、ビルド時にも外部へ取りに行かない。
+
+| | |
+|---|---|
+| 実体 | `public/fonts/*.woff2`（486ファイル / 6.5MB）→ `/fonts/` で配信 |
+| `@font-face` | `src/styles/fonts.css`（自動生成・手で編集しない） |
+| 取り込み直し | `make fonts`（`scripts/fetch-fonts.mjs`） |
+
+| 書体 | 用途 | ウェイト |
+|---|---|---|
+| WDXL Lubrifont JP N | 見出し（`--display`） | 400のみ |
+| Zen Kaku Gothic New | 本文・UI（`--gothic`） | 400 / 500 / 700 |
+
+#### なぜ Astro の Fonts API を使わないか
+
+`fontProviders.google()` はビルド時にフォントを取得して自サイト配信してくれるが、**`@font-face` を各ページの `<style>` にインライン展開する**。日本語フォントは `unicode-range` で123分割されるため定義が486個になり、1ページあたり375KBがインラインで乗る。しかもインラインなのでページごとに再送され、キャッシュが効かない。
+
+`src/styles/fonts.css` は `global.css` から `@import` しているため、ビルド時に**外部CSS 1本にまとまり全ページで共有キャッシュされる**。`astro.config.mjs` の `build.inlineStylesheets: 'never'` がこれを保証している。
+
+| | brotli後 |
+|---|---|
+| Astro Fonts API（インライン） | 28.4 KB **× ページ数** |
+| 現在（外部CSS） | ページ 3.3 KB ＋ 共有CSS 25.7 KB **× 1回** |
+
+フォントの実体は `unicode-range` で分割されたままなので、閲覧者が落とすのは使われた文字を含むチャンクだけ。
+
+> 元テンプレート由来の Atkinson はどのスタイルからも参照されていなかったため、読み込みをやめた。ファイルは `src/assets/fonts/` に残してある。
 
 ### ロゴ
 
@@ -183,16 +209,22 @@ tags: "タグ1, タグ2, タグ3"
 
 ## 6. CI/CD
 
-`.github/workflows/build-test-and-deploy.yml` が main への push で動く。
+`.github/workflows/build-test-and-deploy.yml` が main への push で動く。3ジョブの直列。
 
 ```
+check  → npm ci → make check（lint → test → build）
+   ↓ needs
 build  → npm ci → npm run build → dist/ を artifact に上げる
+   ↓ needs
 deploy → artifact を取得 → Workload Identity で GCP 認証 → Firebase Hosting へデプロイ
 ```
 
+**`check` が落ちれば build も deploy も走らない。** 型エラーやテストの失敗が main に入ったまま公開されることを防ぐための門で、ローカルの `make check` と同じ内容を実行する。
+
 認証は Workload Identity 連携を使っており、サービスアカウントキーをリポジトリに置いていない。`WORKLOAD_IDENTITY_PROVIDER` と `SERVICE_ACCOUNT` は GitHub Secrets に設定済み。
 
-> **未対応** — 現在のワークフローは `npm run build` しか実行していない。`make check` と同じ内容（lint → test → build）を通すよう更新すると、型エラーやテストの失敗が main に入るのを防げる。ジョブ名が `build` なので、ステップを追加するだけでよい。
+> **既知の無駄** — `make check` の最後で astro build が走るため、`build` ジョブと合わせてビルドが2回実行される。ビルド自体は2秒程度なので実害は小さく、ジョブ名 `build` を保つほうを優先した（ブランチ保護の必須チェックがジョブ名を参照している場合に壊さないため）。
+> ビルドを1回に減らすなら、`check` ジョブに artifact のアップロードを持たせて `build` ジョブを削り、`deploy` の `needs` を `check` に向ける。
 
 ---
 

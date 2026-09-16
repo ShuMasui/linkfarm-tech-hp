@@ -1,5 +1,5 @@
 /* ============================================================
-   LinkFarm Tech. — コーポレートサイト デザイントークン
+   LinkFarm Tech. — 団体サイト デザイントークン
    和紙の白ベース / wheat 差し色 / 焦茶の広間隔点線
    ============================================================ */
 
@@ -21,9 +21,13 @@
   --sumi-18:    rgba(61, 43, 31, .18);
   --sumi-10:    rgba(61, 43, 31, .10);
 
-  /* 組版 */
-  --mincho: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
-  --gothic: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  /* 組版
+     見出し専用の --display は WDXL Lubrifont JP N。ウェイトは 400 のみで、
+     700/800 を指定すると偽ボールドが合成されて字面が崩れる。
+     本番では astro.config.mjs の fonts でビルド時に取得し自サイトから配信する。
+     モックは素の HTML なので Google Fonts から読んでいる */
+  --display: "WDXL Lubrifont JP N", "Hiragino Sans", sans-serif;
+  --gothic:  "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
 
   --sheet: 1180px;
   --rail: 9.5rem;                          /* 柱（傍注）の幅 */
@@ -139,7 +143,7 @@ body::after {
   .hashira { position: sticky; top: 120px; }
 }
 .hashira__no {
-  font-family: var(--mincho);
+  font-family: var(--gothic);
   font-size: .82rem;
   font-weight: 700;
   letter-spacing: .18em;
@@ -155,7 +159,7 @@ body::after {
   margin-bottom: .3rem;
 }
 .hashira__ja {
-  font-family: var(--mincho);
+  font-family: var(--gothic);
   font-size: .92rem;
   font-weight: 700;
   letter-spacing: .12em;
@@ -166,8 +170,8 @@ body::after {
    見出しと本文
    ============================================================ */
 h1, h2, h3, h4 {
-  font-family: var(--mincho);
-  font-weight: 700;
+  font-family: var(--display);
+  font-weight: 400;
   line-height: 1.5;
   letter-spacing: .01em;
   margin: 0;
@@ -176,22 +180,28 @@ h1, h2, h3, h4 {
 
 .display {
   font-size: clamp(2.15rem, 6vw, 4.4rem);
-  font-weight: 800;
+  font-weight: 400;
   line-height: 1.42;
   margin-bottom: 1.6rem;
 }
 .h2 {
   font-size: clamp(1.6rem, 3.2vw, 2.5rem);
-  font-weight: 800;
+  font-weight: 400;
   line-height: 1.45;
   margin-bottom: 1.5rem;
 }
 .h3 { font-size: clamp(1.25rem, 2.2vw, 1.6rem); margin-bottom: .6rem; }
 
-/* wheat の下線。色ではなく線で一句だけ差す */
+/* wheat のマーカー。文字の下から30%に重ねる。
+   背景として敷くので文字は線の上に残り、可読性は落ちない。
+   行をまたいだときに両端が正しく描かれるよう box-decoration-break: clone */
 .ul {
-  padding-bottom: .12em;
-  box-shadow: inset 0 -.14em 0 var(--wheat-deep);
+  background-image: linear-gradient(var(--wheat), var(--wheat));
+  background-size: 100% 30%;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 .lead {
@@ -222,7 +232,7 @@ h1, h2, h3, h4 {
 }
 .arrow-link:hover { border-bottom-color: var(--sumi); }
 .arrow-link__no {
-  font-family: var(--mincho);
+  font-family: var(--gothic);
   font-size: .72rem;
   font-weight: 700;
   color: var(--sumi-50);
@@ -306,7 +316,29 @@ h1, h2, h3, h4 {
   padding: 13px 13px 0;
   box-shadow: 0 1px 0 var(--sumi-10), 0 18px 40px -28px rgba(61, 43, 31, .5);
 }
+.plate__frame { position: relative; display: block; }
 .plate img { display: block; width: 100%; object-fit: cover; }
+
+/* チェキ風の日付焼き込み。写真の右下に琥珀色で載せる。
+   フィルムの日付写し込みは琥珀色で、wheat とほぼ同じ温度帯にあるため
+   パレットを崩さずに再現できる */
+.plate__date {
+  position: absolute;
+  right: .85em;
+  bottom: .6em;
+  font-size: .74rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  font-variant-numeric: tabular-nums;
+  color: var(--wheat);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .55);
+  pointer-events: none;
+}
+/* 図版を contain で収める面は地が明るいので、琥珀では沈む */
+.plate--fit .plate__date {
+  color: var(--sumi-70);
+  text-shadow: 0 1px 2px rgba(250, 248, 242, .9);
+}
 .plate__cap {
   font-size: .73rem;
   color: var(--sumi-50);
@@ -331,7 +363,7 @@ h1, h2, h3, h4 {
 }
 .biz-group + .biz { border-top: 0; padding-top: 0; }
 .biz-group__ja {
-  font-family: var(--mincho);
+  font-family: var(--gothic);
   font-size: 1.02rem;
   font-weight: 800;
   letter-spacing: .16em;
@@ -348,9 +380,9 @@ h1, h2, h3, h4 {
 .biz + .biz { margin-top: clamp(56px, 8vw, 104px); }
 .biz__head { display: flex; align-items: baseline; gap: 1.1em; margin-bottom: 1.6rem; flex-wrap: wrap; }
 .biz__no {
-  font-family: var(--mincho);
+  font-family: var(--display);
   font-size: 1.05rem;
-  font-weight: 800;
+  font-weight: 400;
   letter-spacing: .1em;
   background: var(--wheat);
   padding: .1em .55em;
@@ -380,7 +412,7 @@ h1, h2, h3, h4 {
 }
 
 /* ============================================================
-   定義リスト（会社概要）
+   定義リスト（団体概要）
    ============================================================ */
 .deflist { margin: 0; display: grid; grid-template-columns: 1fr; }
 @media (min-width: 640px) { .deflist { grid-template-columns: 8.5rem minmax(0, 1fr); } }
@@ -421,7 +453,7 @@ h1, h2, h3, h4 {
 @media (min-width: 800px) { .posts { grid-template-columns: repeat(3, 1fr); } }
 .post__thumb { background: var(--washi); padding: 9px 9px 0; margin-bottom: 1.1rem; box-shadow: 0 1px 0 var(--sumi-10); }
 .post__thumb img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
-.post__date { font-family: var(--mincho); font-size: .76rem; letter-spacing: .1em; color: var(--sumi-50); display: block; margin-bottom: .5rem; }
+.post__date { font-family: var(--gothic); font-size: .76rem; letter-spacing: .1em; color: var(--sumi-50); display: block; margin-bottom: .5rem; }
 .post :is(h2, h3) { font-size: 1rem; line-height: 1.75; margin-bottom: .6rem; }
 .post :is(h2, h3) a {
   color: var(--sumi); text-decoration: none;
@@ -447,8 +479,9 @@ h1, h2, h3, h4 {
   align-items: center;
 }
 @media (min-width: 900px) { .ink { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); } }
-.ink h2 { font-size: clamp(1.6rem, 3.4vw, 2.5rem); font-weight: 800; line-height: 1.5; margin-bottom: 1.4rem; }
-.ink .ul { box-shadow: inset 0 -.14em 0 var(--wheat); }
+.ink h2 { font-size: clamp(1.6rem, 3.4vw, 2.5rem); font-weight: 400; line-height: 1.5; margin-bottom: 1.4rem; }
+/* 墨の面では wheat のベタが白文字を潰すので、透過させて重ねる */
+.ink .ul { background-image: linear-gradient(rgba(245, 222, 179, .42), rgba(245, 222, 179, .42)); }
 .ink p { color: rgba(250, 248, 242, .78); font-size: .95rem; line-height: 2.15; margin: 0 0 2.2rem; max-width: 34em; }
 .ink .btn--fill { background: var(--wheat); color: var(--sumi); border-color: var(--wheat); }
 .ink .btn--fill:hover { background: var(--wheat-deep); border-color: var(--wheat-deep); }
@@ -506,7 +539,7 @@ a:focus-visible, button:focus-visible {
    ============================================================ */
 .pagehead { padding: clamp(56px, 8vw, 104px) 0 clamp(40px, 6vw, 72px); }
 .pagehead__no {
-  font-family: var(--mincho);
+  font-family: var(--gothic);
   font-size: .86rem;
   font-weight: 700;
   letter-spacing: .18em;
@@ -566,16 +599,16 @@ a:focus-visible, button:focus-visible {
 .toc__row:hover { background: rgba(245, 222, 179, .35); }
 .toc__no {
   grid-area: no;
-  font-family: var(--mincho);
+  font-family: var(--gothic);
   font-size: .82rem; font-weight: 700; letter-spacing: .14em;
   color: var(--sumi-50);
 }
 .toc__en { display: none; }
 .toc__ja {
   grid-area: ja;
-  font-family: var(--mincho);
+  font-family: var(--display);
   font-size: clamp(1.2rem, 2.2vw, 1.55rem);
-  font-weight: 800;
+  font-weight: 400;
   letter-spacing: .06em;
 }
 .toc__desc { grid-area: desc; font-size: .84rem; color: var(--sumi-70); line-height: 1.95; }
