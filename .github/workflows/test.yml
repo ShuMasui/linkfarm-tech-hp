@@ -1,0 +1,24 @@
+# 再利用可能ワークフロー: 検査のみ
+#
+# lint → test → build を通す。ローカルでは make check が同じ内容を実行する。
+# 呼び出し側（check-pr / deploy-to-prod）から uses: で参照する。
+name: Test
+
+on:
+    workflow_call:
+
+jobs:
+    check:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: 22
+                cache: npm
+            - name: Install Dependencies
+              run: npm ci
+            - name: Lint, Test and Build
+              run: make check
