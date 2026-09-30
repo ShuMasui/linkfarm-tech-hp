@@ -1,0 +1,13 @@
+# PR の検査。test を呼ぶだけで、公開は一切行わない。
+#
+# ブランチ保護の必須チェックには、このワークフローが生む
+# 「test / check」を指定する。
+name: Check PR
+
+on:
+    pull_request:
+        branches: [main]
+
+jobs:
+    test:
+        uses: ./.github/workflows/test.yml

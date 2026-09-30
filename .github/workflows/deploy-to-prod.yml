@@ -1,0 +1,21 @@
+# main への push で本番へ公開する。
+#
+# test を先に通し、それが緑のときだけ build + deploy へ進む。
+# 検査に落ちたものが公開されることはない。
+name: Deploy to Prod
+
+on:
+    push:
+        branches: [main]
+
+jobs:
+    test:
+        uses: ./.github/workflows/test.yml
+
+    build-and-deploy:
+        needs: test
+        uses: ./.github/workflows/build-and-deploy.yml
+        permissions:
+            contents: read
+            id-token: write
+        secrets: inherit

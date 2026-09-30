@@ -1,30 +1,23 @@
-name: CI/CD Pipeline
-on:
-    push: 
-        branches: [main]
-jobs:
-    # 前段階の検査。lint → test → build を通してから build ジョブへ進む。
-    # ここが落ちれば build も deploy も走らないので、型エラーやテストの
-    # 失敗が main に入ったまま公開されることを防げる。
-    # ローカルでは make check が同じ内容を実行する。
-    check:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Repository
-              uses: actions/checkout@v4
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                node-version: 22
-                cache: npm
-            - name: Install Dependencies
-              run: npm ci
-            - name: Lint, Test and Build
-              run: make check
+# 再利用可能ワークフロー: ビルドと公開
+#
+# dist/ を作り、Firebase Hosting へ公開する。build と deploy を分けてあるのは
+# 成果物を artifact として残し、公開物が何だったかを後から追えるようにするため。
+#
+# 認証は Workload Identity 連携を使うので、呼び出し側のジョブで
+# id-token: write の権限と secrets: inherit を指定する必要がある。
+name: Build and Deploy
 
+on:
+    workflow_call:
+        secrets:
+            WORKLOAD_IDENTITY_PROVIDER:
+                required: true
+            SERVICE_ACCOUNT:
+                required: true
+
+jobs:
     build:
         runs-on: ubuntu-latest
-        needs: check
         steps:
             - name: Checkout Repository
               uses: actions/checkout@v4
@@ -39,9 +32,10 @@ jobs:
               run: npm run build
             - name: Upload build artifacts
               uses: actions/upload-artifact@v4
-              with: 
-               name: dist-artifacts
-               path: dist
+              with:
+                name: dist-artifacts
+                path: dist
+
     deploy:
         runs-on: ubuntu-latest
         needs: build
@@ -49,7 +43,7 @@ jobs:
             contents: read
             id-token: write
         steps:
-            - name: Chekout Repository
+            - name: Checkout Repository
               uses: actions/checkout@v4
             - name: Setup Node.js
               uses: actions/setup-node@v4
