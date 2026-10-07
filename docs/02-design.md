@@ -320,6 +320,7 @@ SERVICES      届け方をつくる事業。
 | ヘッダーの「お問い合わせ」から文字が消えた | `.nav a`（0,1,1）が `.btn--fill`（0,1,0）に勝つ | `.nav a.btn--fill { color: var(--washi) }` |
 | 現在地のページでボタンの文字が消えた | `.nav a[aria-current]` と `.nav a.btn--fill` が同点で後勝ち | `.nav a.btn--fill[aria-current="page"]` |
 | 記事タイトルが素のリンク色になった | セレクタが `.post h3 a` のまま、マークアップは `h2` | `.post :is(h2, h3) a` |
+| 記事本文に置いたボタンの文字が焦茶地に溶け、下線も乗った | `.prose a`（0,1,1）が `.btn--fill`（0,1,0）に勝つ。`.prose a:hover` の下線とも同点 | `.prose a.btn { box-shadow: none }` / `.prose a.btn--fill { color: var(--color-washi) }`（`.prose a:hover` の後ろに置く） |
 
 ### 重ね順
 
