@@ -754,6 +754,11 @@ body::before {
   transition: box-shadow .2s;
 }
 .prose a:hover { box-shadow: inset 0 -.5em 0 var(--color-wheat); }
+/* 本文中のボタン（LinkButton）。.prose a（0,1,1）が .btn--fill（0,1,0）に勝って
+   焦茶地に焦茶文字になるうえ、リンクの下線まで乗るので、詳細度を揃えて打ち消す。
+   .prose a:hover と同点なので、必ずその後ろに置く（docs/02-design.md §10） */
+.prose a.btn { box-shadow: none; }
+.prose a.btn--fill { color: var(--color-washi); }
 .prose :is(ul, ol) { padding-left: 1.4em; }
 .prose li + li { margin-top: .5em; }
 .prose img { width: 100%; height: auto; display: block; }

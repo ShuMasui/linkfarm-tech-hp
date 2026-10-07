@@ -1,0 +1,13 @@
+---
+// 記事本文（MDX）に置く、焦茶ベタ塗りのリンクボタン。
+// 外部サイトへ出る前提なので、別タブで開き rel を付ける。
+// 見た目は global.css の .btn / .btn--fill と、.prose 内の上書きに任せる。
+interface Props {
+  href: string;
+}
+const { href } = Astro.props;
+---
+
+<div class="linkbutton">
+  <a class="btn btn--fill" href={href} target="_blank" rel="noopener noreferrer"><slot /></a>
+</div>
